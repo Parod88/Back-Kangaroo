@@ -43,15 +43,15 @@ async function initAdvertisement() {
   console.log(`Deleted ${deletedAdvertisements.deletedCount} advertisements.`);
 
   //Search user id for asociate advertisement with user admin
-  const userHosted = await userModel.findOne({email: 'admin@wallaclone.com'});
+  const userAdmin = await userModel.findOne({email: 'admin@wallaclone.com'});
 
   //Asociate advertisement with user hosted id
-  const advertisementsWithHosted = advertisementSeedData.advertisements.map((advertisement) => {
-    advertisement.hosted = userHosted._id;
+  const advertisementsWithAuthor = advertisementSeedData.advertisements.map((advertisement) => {
+    advertisement.author = userAdmin._id;
     return advertisement;
   });
 
   // Create mockData advertisements
-  const advertisementsInsert = await advertisementModel.insertMany(advertisementsWithHosted);
+  const advertisementsInsert = await advertisementModel.insertMany(advertisementsWithAuthor);
   console.log(`Create ${advertisementsInsert.length} advertisements.`);
 }

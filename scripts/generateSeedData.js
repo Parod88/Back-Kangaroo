@@ -22,7 +22,6 @@ async function seedLoadData() {
 //================================================================
 async function generateSeedUsersData() {
   console.log('Success: Users control role create manual in UsersAdminSeedData file.');
-  // console.log('Success: users seed data file generated in seedData directory.');
 }
 
 //================================================================
@@ -33,15 +32,20 @@ async function createSeedAdvertisementData() {
 
   for (let id = 1; id <= 100; id++) {
     advertisement.push({
-      name: faker.commerce.unique().productName(),
+      name: faker.commerce.productName(),
       description: faker.lorem.paragraph(),
-      featuredImage: faker.image.imageUrl(),
-      galleryImgs: [
+      sale: faker.datatype.boolean(),
+      price: faker.datatype.number(3, 150),
+      image: faker.image.imageUrl(),
+      gallery: [
         faker.image.sports(1500, 1500),
         faker.image.sports(1500, 1500),
         faker.image.sports(1500, 1500),
         faker.image.sports(1500, 1500)
-      ]
+      ],
+      //In model limit enum tags
+      tags: ['tag1', 'tag2'],
+      author: ''
     });
   }
 

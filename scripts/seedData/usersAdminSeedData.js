@@ -3,31 +3,25 @@ const bcrypt = require('bcryptjs');
 const data = {
   users: [
     {
-      firstName: 'WallacloneAdmin',
-      lastName: 'Administrator',
+      name: 'WallacloneAdmin',
       email: 'admin@wallaclone.com',
       password: bcrypt.hashSync('123456'),
       imageAvatar: 'https://i.pravatar.cc/500',
-      isAdmin: true,
-      isAdvertiser: true
+      isAdmin: true
     },
     {
-      firstName: 'WallacloneAdvertiser',
-      lastName: 'Advertiser',
+      name: 'WallacloneAdvertiser',
       email: 'advertiser@wallaclone.com',
       password: bcrypt.hashSync('123456'),
       imageAvatar: 'https://i.pravatar.cc/500',
-      isAdmin: true,
-      isAdvertiser: true
+      isAdmin: true
     },
     {
-      firstName: 'WallacloneUser',
-      lastName: 'User',
+      name: 'WallacloneUser',
       email: 'user@wallaclone.com',
       password: bcrypt.hashSync('123456'),
       imageAvatar: 'https://i.pravatar.cc/500',
-      isAdmin: true,
-      isAdvertiser: true
+      isAdmin: true
     }
   ]
 };
