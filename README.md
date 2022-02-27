@@ -42,6 +42,45 @@ Otra forma adicional es ejecutar el proyecto en el cloud de **StackBlitz**
 Se debe tener mongoDB instalado en local: https://www.mongodb.com/
 Una vez instalado mongo se deberá generar una colección llamada **wallaclone** a la cual se conecta el proyecto para almacenar y consumir datos.
 
+Si es la primera vez que se ejecula la base de datos, se deberan cargar los datos iniciales de ejemplo para poder realizar peticiones al API. Para ello se debe ejecutar.
+
+```
+npm run loadSeedData
+```
+
+## Cargar datos de ejemplo en mongoDB
+
+En el package.json existen dos scripts para crear y cargar datos simulados.
+Si se ejecuta el script generateSeedData se crean en el directorio scripts/seedData los ficheros con los datos generados a través de faker.js
+
+```
+npm run generateSeedData
+```
+
+Para cargar los ficheros con los datos simulados a la base de datos, necesitamos ejecutar el script loadSeedData. A partir de ese momento se generan en la base de datos los usuarios de prueba y el resto de elementos.
+
+```
+npm run loadSeedData
+```
+
+**Usuario administrador de prueba**
+
+- nombre: WallacloneAdmin
+- email: admin@wallaclone.com
+- password: 123456
+
+**Usuario anunciante de prueba**
+
+- nombre: WallacloneAdvertiser
+- email: advertiser@wallaclone.com
+- password: 123456
+
+**Usuario usuario registrado de prueba**
+
+- nombre: WallacloneUser
+- email: user@wallaclone.com
+- password: 123456
+
 ### Para comprobar que el proyecto se encuentra en ejecución se puede visitar la dirección:
 
 - Ruta front de servidor: http://localhost:3000/
