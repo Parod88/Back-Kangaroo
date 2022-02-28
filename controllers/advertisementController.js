@@ -19,7 +19,7 @@ const AdvertisementModel = require('../models/Advertisement.js');
 // GET/api/v1/anuncios
 const getAdvertisementsList = async (req, res, next) => {
   try {
-    const advertisementsList = await AdvertisementModel.find();
+    const advertisementsList = await AdvertisementModel.find().sort({updatedAt: -1});
     res.status(200).json({data: advertisementsList});
   } catch (error) {
     // res.status(500).send({
@@ -29,6 +29,22 @@ const getAdvertisementsList = async (req, res, next) => {
   }
 };
 
+const getPaginatedAdvertisementsList = async (req, res, next) => {
+  let perPage = 9;
+  let page = req.params.page || 1;
+  try {
+    const paginatedAdvertisements = await AdvertisementModel.find({})
+      .skip(perPage * page - perPage)
+      .limit(perPage)
+      .sort({updatedAt: -1})
+      .exec();
+    res.json({data: paginatedAdvertisements});
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
-  getAdvertisementsList
+  getAdvertisementsList,
+  getPaginatedAdvertisementsList
 };
