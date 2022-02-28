@@ -3,7 +3,6 @@
 const express = require('express');
 const router = express.Router();
 const {
-  exampleAdvertisementMethod,
   getAdvertisementsList,
   getPaginatedAdvertisementsList
 } = require('../../../controllers/advertisementController.js');
