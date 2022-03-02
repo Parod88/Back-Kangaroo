@@ -1,6 +1,7 @@
 'use strict';
 
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema(
   {
@@ -14,6 +15,14 @@ const userSchema = new mongoose.Schema(
     timestamps: true
   }
 );
+
+userSchema.statics.hashPassword = function(passwordHashed){
+  return bcrypt.hash(passwordHashed, 7);
+}
+
+userSchema.methods.comparePassword = function(passwordHashed){
+  return bcrypt.compare(passwordHashed, this.password);
+}
 
 //Create model
 const User = mongoose.model('User', userSchema);
