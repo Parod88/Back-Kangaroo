@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 const advertisementSchema = mongoose.Schema(
   {
     name: {type: String, maxLength: 100, required: true, index: true},
-    description: {type: String, required: true},
+    description: {type: String, maxLength: 1000, minLength: 10, required: true},
     sale: {type: Boolean, required: true, index: true},
     price: {type: Number, required: true},
     image: {type: String, maxLength: 500},

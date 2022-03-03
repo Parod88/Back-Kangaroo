@@ -2,9 +2,14 @@
 
 const express = require('express');
 const router = express.Router();
-const {exampleAdvertisementMethod} = require('../../../controllers/advertisementController.js');
+const {
+  getAdvertisementsList,
+  getPaginatedAdvertisementsList
+} = require('../../../controllers/advertisementController.js');
 
 // Routes
-router.get('/', exampleAdvertisementMethod);
+router.get('/', getAdvertisementsList);
+
+router.get('/:page', getPaginatedAdvertisementsList);
 
 module.exports = router;
