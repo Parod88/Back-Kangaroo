@@ -14,6 +14,18 @@ const exampleUserMethod = async (req, res, next) => {
   }
 };
 
+const updateUser = async (req, res, next) =>{
+  try {}catch(error) {
+    res.status(400).json({
+      info: 'User update process failed',
+      message: `${error}`
+
+
+    });
+  }
+}
+
 module.exports = {
-  exampleUserMethod
+  exampleUserMethod,
+  updateUser
 };
