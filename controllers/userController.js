@@ -16,19 +16,17 @@ const exampleUserMethod = async (req, res, next) => {
 
 const register = async (req, res, next) => {
   try {
-    const {name, email, password, isAdmin} = req.body;
+    const {name, email, password} = req.body;
 
     const hashedPassword = await User.hashPassword(password);
+    const newUser = new User({name, email, password: hashedPassword});
 
-    const newUser = new User({name, email, hashedPassword});
-    await newUser.save();
-
-    res.status(201).json({newUser});
+    res.status(201).json(await newUser.save());
   } catch (error) {
-    res.status(418).send({
-      message: 'Error in user creation process.'
+    res.status(418).json({
+      info: 'User creation process failed',
+      message: `${error}`
     });
-    next(error);
   }
 };
 
