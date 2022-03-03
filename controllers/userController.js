@@ -1,10 +1,10 @@
 'use strict';
 
-const UserModel = require('../models/User.js');
+const User = require('../models/User.js');
 
 const exampleUserMethod = async (req, res, next) => {
   try {
-    const users = await UserModel.find({});
+    const users = await User.find({});
     res.status(200).json({data: users});
   } catch (error) {
     res.status(500).send({
@@ -14,18 +14,31 @@ const exampleUserMethod = async (req, res, next) => {
   }
 };
 
-const updateUser = async (req, res, next) =>{
-  try {}catch(error) {
+const update = async (req, res, next) => {
+  try {
+    const _id = req.params.userId;
+    const data = req.body;
+    const updatedUser = await User.findOneAndUpdate({_id}, data, {
+      new: true
+    });
+
+    if (!updatedUser) {
+      res.status(404).json({
+        info: 'User ID not found.'
+      });
+      return;
+    }
+
+    res.status(201).json(updatedUser);
+  } catch (error) {
     res.status(400).json({
       info: 'User update process failed',
       message: `${error}`
-
-
     });
   }
-}
+};
 
 module.exports = {
   exampleUserMethod,
-  updateUser
+  update
 };
