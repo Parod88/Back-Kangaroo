@@ -57,8 +57,9 @@ app.use('/', require('./routes/index'));
 
 // Api routers
 app.use('/api/v1/user', require('./routes/api/v1/users'));
-app.use('/api/v1/advertisement', jwt ,require('./routes/api/v1/advertisement'));
+app.use('/api/v1/advertisements', jwt ,require('./routes/api/v1/advertisement'));
 app.use('/api/v1/login',loginRoutes);
+
 //==================================================================
 //Errors
 //==================================================================
