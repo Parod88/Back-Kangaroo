@@ -10,6 +10,9 @@ const swaggerUi = require('swagger-ui-express'),
   swaggerDocs = require('./swagger.json');
 var dotenv = require('dotenv');
 
+const loginRoutes = require('./routes/api/v1/login');
+const jwt = require('./middlewares/jwtAuth')
+
 //Create server express
 const app = express();
 
@@ -54,7 +57,8 @@ app.use('/', require('./routes/index'));
 
 // Api routers
 app.use('/api/v1/user', require('./routes/api/v1/users'));
-app.use('/api/v1/advertisements', require('./routes/api/v1/advertisement'));
+app.use('/api/v1/advertisements', jwt ,require('./routes/api/v1/advertisement'));
+app.use('/api/v1/login',loginRoutes);
 
 //==================================================================
 //Errors
