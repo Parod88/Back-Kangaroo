@@ -15,10 +15,10 @@ const advertisementSchema = mongoose.Schema(
     tags: {
       type: [String],
       required: true,
-      enum: ['tag1', 'tag2', 'tag3'],
+      //enum: ['tag1', 'tag2', 'tag3'],
       default: ['uncategorized']
     },
-    name: {type: String, maxLength: 100, required: true, index: true},
+    //name: {type: String, maxLength: 100, required: true, index: true},
     author: {type: mongoose.Schema.Types.ObjectID, ref: 'User'}
   },
   {timestamps: true}
