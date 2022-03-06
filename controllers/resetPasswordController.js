@@ -2,40 +2,50 @@
 
 const jwt = require('jsonwebtoken');
 const UserModel = require('../models/User');
+const {unsubscribe} = require('../routes/api/v1/users');
+const {transporter, resetPasswordEmail} = require('../services/mailer');
 
 const forgotPassword = async (req, res, next) => {
   const message = 'Check your email for a link to reset your password';
   let verificationLink;
   let emailStatus = 'OK';
+  const email = req.body.email;
+  const user = await UserModel.findOne({email});
   try {
-    const email = req.body.email;
-    const user = await UserModel.findOne({email});
-
     if (!user) {
       res.json({message});
       return;
     }
-    const token = jwt.sign({userId: user.id, email: user.email}, process.env.JWT_SECRET, {
+    const token = jwt.sign({userId: user.id, email: user.email}, process.env.JWT_SECRET_RESET, {
       expiresIn: '10m'
     });
-    verificationLink = `${process.env.BASE_URL}/api/v1/login/reset-pass/${token}`;
-    user.resetToken = token;
+    verificationLink = `${process.env.BASE_URL}/api/v1/user/new-password/${token}`;
+    user.userToken = token;
   } catch (error) {
     next(error).json({message});
   }
 
   //TODO SEND EMAIL
   try {
+    await transporter.sendMail({
+      from: `"Forgotten Password" <${process.env.MAILER_ACCOUNT}> `,
+      to: user.email,
+      subject: 'Link to reset password',
+      html: `
+    <b> Click on the following link, or paste it into your browser to complete the process:</b>
+    <a href="${verificationLink} ">${verificationLink}</a>
+  `
+    });
   } catch (error) {
     emailStatus = error;
     return res.status(400).json({message: 'something went wrong'});
   }
 
   try {
-    await user.save(user);
+    await user.save();
   } catch (error) {
     emailStatus = error;
-    return next(error).status(400).json({message: 'Something went wrong'});
+    return res.status(400).json({message: 'Something went wrong'});
   }
 
   res.json({message, info: emailStatus});
@@ -43,27 +53,29 @@ const forgotPassword = async (req, res, next) => {
 
 const resetPassword = async (req, res, next) => {
   const {newPassword} = req.body;
-  const resetToken = req.headers.reset;
+  const userToken = req.headers.reset;
 
-  if (!(resetToken && newPassword)) {
+  if (!(userToken && newPassword)) {
     res.status(400).json({message: 'All the fields are required'});
     return;
   }
 
-  let jwtPayload;
-  const user = await UserModel.findOne({where: {resetToken}});
-  try {
-    jwtPayload = jwt.verify(resetToken, process.env.JWT_SECRET_RESET);
-  } catch (error) {
-    next(error).json({message: 'Something went wrong'});
+  const user = await UserModel.findOne({userToken});
+  if (!user) {
+    res.status(401).json({message: 'Something went wrong'});
+    return;
   }
 
-  UserModel.password = newPassword;
-
   try {
+    const encryptedPass = await UserModel.hashPassword(newPassword);
+    user.password = encryptedPass;
+    user.userToken = null;
+    await user.save();
   } catch (error) {
-    return res.status(401).json({message: 'Something went wrong'});
+    return res.status(401).json({error, message: 'Something went wrong'});
   }
+
+  res.json({message: 'Password changed'});
 };
 
 module.exports = {
