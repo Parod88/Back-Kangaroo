@@ -9,9 +9,11 @@ const {register} = require('../../../controllers/userController.js');
 const {forgotPassword, resetPassword} = require('../../../controllers/resetPasswordController');
 const {deleteUser} = require('../../../controllers/userController.js');
 
-
 // Routes
 router.get('/', exampleUserMethod);
+
+// /user
+router.post('/register', register);
 router.put('/:userId', auth, update);
 router.delete('/:userId', auth, deleteUser);
 
