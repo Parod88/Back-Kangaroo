@@ -14,6 +14,30 @@ const exampleUserMethod = async (req, res, next) => {
   }
 };
 
+const update = async (req, res, next) => {
+  try {
+    const _id = req.params.userId;
+    const data = req.body;
+    const updatedUser = await User.findOneAndUpdate({_id}, data, {
+      new: true
+    });
+
+    if (!updatedUser) {
+      res.status(404).json({
+        info: 'User ID not found.'
+      });
+      return;
+    }
+
+    res.status(201).json(updatedUser);
+  } catch (error) {
+    res.status(400).json({
+      info: 'User update process failed',
+      message: `${error}`
+    });
+  }
+};
+
 const deleteUser = async (req, res, next) => {
   try {
     const _id = req.params.userId;
@@ -38,5 +62,6 @@ const deleteUser = async (req, res, next) => {
 
 module.exports = {
   exampleUserMethod,
+  update,
   deleteUser
 };
