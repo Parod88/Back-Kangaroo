@@ -9,9 +9,10 @@ const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express'),
   swaggerDocs = require('./swagger.json');
 var dotenv = require('dotenv');
+const cors = require('cors');
 
 const loginRoutes = require('./routes/api/v1/login');
-const jwt = require('./middlewares/jwtAuth')
+const jwt = require('./middlewares/jwtAuth');
 
 //Create server express
 const app = express();
@@ -27,6 +28,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // General functions server setup
+app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
 const swagger = require('swagger-node-express');
@@ -57,8 +59,8 @@ app.use('/', require('./routes/index'));
 
 // Api routers
 app.use('/api/v1/user', require('./routes/api/v1/users'));
-app.use('/api/v1/advertisements', jwt ,require('./routes/api/v1/advertisement'));
-app.use('/api/v1/login',loginRoutes);
+app.use('/api/v1/advertisements', require('./routes/api/v1/advertisement'));
+app.use('/api/v1/login', loginRoutes);
 
 //==================================================================
 //Errors
