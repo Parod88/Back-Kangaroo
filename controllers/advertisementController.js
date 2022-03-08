@@ -28,7 +28,7 @@ const getPaginatedAdvertisementsList = async (req, res, next) => {
       .skip(perPage * page - perPage)
       .limit(perPage)
       .exec();
-    res.json({data: paginatedAdvertisements});
+    res.json({paginatedAdvertisements});
   } catch (error) {
     next(error);
   }
@@ -61,7 +61,7 @@ const createAdvert = async (req, res, next) => {
       author
     });
     const advertSaved = await newAdvertisement.save();
-    res.status(201).json(advertSaved);
+    res.status(201).json({advertSaved});
   } catch (error) {
     next(error);
   }
@@ -74,7 +74,7 @@ const updateAdvertById = async (req, res, next) => {
     const updateAdvert = await AdvertisementModel.findByIdAndUpdate(req.params._id, req.body, {
       new: true
     });
-    res.status(200).json(updateAdvert);
+    res.status(200).json({updateAdvert});
   } catch (error) {
     next(error);
   }
