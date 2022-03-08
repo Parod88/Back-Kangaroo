@@ -72,6 +72,16 @@ try{
 } catch(error){
   next(error);
 }  
+// GET/api/v1/advertisements/:id
+const getAdvertById = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+
+    const singleAdvert = await AdvertisementModel.findById(id);
+    res.json({data: singleAdvert});
+  } catch (error) {
+    next(error);
+  }
 };
 
 module.exports = {
@@ -80,5 +90,6 @@ module.exports = {
   getAdvertById,
   createAdvert,
   updateAdvertById,
-  deleteAdvertById
+  deleteAdvertById,
+  getAdvertById,
 };
