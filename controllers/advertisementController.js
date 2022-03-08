@@ -4,7 +4,8 @@ const AdvertisementModel = require('../models/Advertisement.js');
 
 //CRUD
 
-// GET/api/v1/advertisements
+//api/v1/advertisements
+// GET
 const getAdvertisementsList = async (req, res, next) => {
   try {
     const advertisementsList = await AdvertisementModel.find().sort({updatedAt: -1});
@@ -33,52 +34,58 @@ const getPaginatedAdvertisementsList = async (req, res, next) => {
   }
 };
 
-const createAdvert = async (req, res, next) => {
-  try{
-    const {name, description, sale, price, image, gallery, tags, author} = req.body;
-    const newAdvertisement = new AdvertisementModel({name, description, sale, price, image, gallery, tags, author});
-    const advertSaved= await newAdvertisement.save();
-    res.status(201).json(advertSaved);
-  } catch(error){
-    next(error);
-  } 
-};
-
-const getAdvertById = async (req, res, next) => {
-try{
-  const advert = await AdvertisementModel.findById(req.params._id);
-  res.status(200).json(advert)
-} catch(error){
-  next(error);
-} 
-};
-
-
-const updateAdvertById = async (req, res, next) => {
-try{
-  const updateAdvert = await AdvertisementModel.findByIdAndUpdate(req.params._id, req.body, {
-    new: true,
-  })
-  res.status(200).json(updateAdvert);
-} catch(error){
-  next(error);
-} 
-};
-
-const deleteAdvertById = async (req, res, next) => {
-try{
-  await AdvertisementModel.findByIdAndDelete(req.params._id);
-  res.status(204).json();
-} catch(error){
-  next(error);
-}  
-// GET/api/v1/advertisements/:id
 const getAdvertById = async (req, res, next) => {
   try {
-    const id = req.params.id;
+    const id = req.params._id;
 
-    const singleAdvert = await AdvertisementModel.findById(id);
-    res.json({data: singleAdvert});
+    const singleAdvert = await AdvertisementModel.findById(_id);
+    res.json({singleAdvert});
+  } catch (error) {
+    next(error);
+  }
+};
+
+// POST
+//api/v1 / advertisments
+const createAdvert = async (req, res, next) => {
+  try {
+    const {name, description, sale, price, image, gallery, tags, author} = req.body;
+    const newAdvertisement = new AdvertisementModel({
+      name,
+      description,
+      sale,
+      price,
+      image,
+      gallery,
+      tags,
+      author
+    });
+    const advertSaved = await newAdvertisement.save();
+    res.status(201).json(advertSaved);
+  } catch (error) {
+    next(error);
+  }
+};
+
+//PUT
+//api/v1/advertisments
+const updateAdvertById = async (req, res, next) => {
+  try {
+    const updateAdvert = await AdvertisementModel.findByIdAndUpdate(req.params._id, req.body, {
+      new: true
+    });
+    res.status(200).json(updateAdvert);
+  } catch (error) {
+    next(error);
+  }
+};
+
+//DELETE
+//api/v1/advertisments
+const deleteAdvertById = async (req, res, next) => {
+  try {
+    await AdvertisementModel.findByIdAndDelete(req.params._id);
+    res.status(204).json();
   } catch (error) {
     next(error);
   }
@@ -90,6 +97,5 @@ module.exports = {
   getAdvertById,
   createAdvert,
   updateAdvertById,
-  deleteAdvertById,
-  getAdvertById,
+  deleteAdvertById
 };
