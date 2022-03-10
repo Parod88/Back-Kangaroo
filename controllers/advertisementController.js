@@ -9,7 +9,9 @@ const User = require('../models/User.js');
 // GET
 const getAdvertisementsList = async (req, res, next) => {
   try {
-    const advertisementsList = await AdvertisementModel.find().sort({updatedAt: -1});
+    const advertisementsList = await AdvertisementModel.find()
+      .populate('author')
+      .sort({updatedAt: -1});
     res.status(200).json({results: advertisementsList});
     // res.status(302).redirect('/api/v1/advertisements/1');
   } catch (error) {
@@ -25,6 +27,7 @@ const getPaginatedAdvertisementsList = async (req, res, next) => {
   let page = req.params.page || 1;
   try {
     const paginatedAdvertisements = await AdvertisementModel.find({})
+      .populate('author')
       .sort({updatedAt: -1})
       .skip(perPage * page - perPage)
       .limit(perPage)
