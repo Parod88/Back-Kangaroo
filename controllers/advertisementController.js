@@ -1,6 +1,7 @@
 'use strict';
 
 const AdvertisementModel = require('../models/Advertisement.js');
+const User = require('../models/User.js');
 
 //CRUD
 
@@ -9,7 +10,7 @@ const AdvertisementModel = require('../models/Advertisement.js');
 const getAdvertisementsList = async (req, res, next) => {
   try {
     const advertisementsList = await AdvertisementModel.find().sort({updatedAt: -1});
-    res.status(200).json({advertisementsList});
+    res.status(200).json({results: advertisementsList});
     // res.status(302).redirect('/api/v1/advertisements/1');
   } catch (error) {
     res.status(500).send({
@@ -28,7 +29,7 @@ const getPaginatedAdvertisementsList = async (req, res, next) => {
       .skip(perPage * page - perPage)
       .limit(perPage)
       .exec();
-    res.json({paginatedAdvertisements});
+    res.json({results: paginatedAdvertisements});
   } catch (error) {
     next(error);
   }
@@ -39,7 +40,7 @@ const getAdvertById = async (req, res, next) => {
     const id = req.params._id;
 
     const singleAdvert = await AdvertisementModel.findById(_id);
-    res.json({singleAdvert});
+    res.json({results: singleAdvert});
   } catch (error) {
     next(error);
   }
@@ -61,7 +62,7 @@ const createAdvert = async (req, res, next) => {
       author
     });
     const advertSaved = await newAdvertisement.save();
-    res.status(201).json({advertSaved});
+    res.status(201).json({results: advertSaved});
   } catch (error) {
     next(error);
   }
@@ -74,7 +75,7 @@ const updateAdvertById = async (req, res, next) => {
     const updateAdvert = await AdvertisementModel.findByIdAndUpdate(req.params._id, req.body, {
       new: true
     });
-    res.status(200).json({updateAdvert});
+    res.status(200).json({results: updateAdvert});
   } catch (error) {
     next(error);
   }
