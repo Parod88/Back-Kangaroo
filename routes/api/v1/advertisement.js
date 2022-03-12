@@ -15,7 +15,7 @@ const {
 // GET routes
 router.get('/', getAdvertisementsList);
 
-router.get('/:page', getPaginatedAdvertisementsList);
+router.get('/:p&:page', getPaginatedAdvertisementsList);
 
 router.get('/:_id', getAdvertById);
 

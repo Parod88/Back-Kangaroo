@@ -40,7 +40,7 @@ const getPaginatedAdvertisementsList = async (req, res, next) => {
 
 const getAdvertById = async (req, res, next) => {
   try {
-    const id = req.params._id;
+    const _id = req.params._id;
 
     const singleAdvert = await AdvertisementModel.findById(_id);
     res.json({results: singleAdvert});
