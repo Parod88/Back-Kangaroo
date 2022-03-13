@@ -19,7 +19,8 @@ const forgotPassword = async (req, res, next) => {
     const token = jwt.sign({userId: user.id, email: user.email}, process.env.JWT_SECRET_RESET, {
       expiresIn: '10m'
     });
-    verificationLink = `${process.env.BASE_URL}/api/v1/user/new-password/${token}`;
+    // verificationLink = `${process.env.BASE_URL}/api/v1/user/new-password/${token}`;
+    verificationLink = `${process.env.FRONT_RESET_URL}/${token}`;
     user.userToken = token;
   } catch (error) {
     next(error).json({message});
@@ -52,10 +53,10 @@ const forgotPassword = async (req, res, next) => {
 };
 
 const resetPassword = async (req, res, next) => {
-  const {newPassword} = req.body;
+  const {newPassword, newPasswordConfirmation} = req.body;
   const userToken = req.headers.reset;
 
-  if (!(userToken && newPassword)) {
+  if (!(userToken && newPassword === newPasswordConfirmation)) {
     res.status(400).json({message: 'All the fields are required'});
     return;
   }
