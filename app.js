@@ -58,8 +58,11 @@ swagger.setAppHandler(app);
 app.use('/', require('./routes/index'));
 
 // Api routers
-app.use('/api/v1/user', require('./routes/api/v1/users'));
+app.use('/api/v1/chat/message', require('./routes/api/v1/chat/message'));
+app.use('/api/v1/chat/conversation', require('./routes/api/v1/chat/conversation'));
+
 app.use('/api/v1/advertisements', require('./routes/api/v1/advertisement'));
+app.use('/api/v1/user', require('./routes/api/v1/users'));
 app.use('/api/v1/login', loginRoutes);
 
 //==================================================================
