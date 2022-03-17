@@ -11,6 +11,7 @@ const advertisementSchema = mongoose.Schema(
     sale: {type: Boolean, required: true, index: true},
     price: {type: Number, required: true},
     image: {type: String, maxLength: 500},
+    categories: {type: mongoose.Schema.Types.ObjectID, ref: 'Category'},
     gallery: [],
     tags: {
       type: [String],

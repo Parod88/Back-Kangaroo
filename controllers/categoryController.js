@@ -35,8 +35,6 @@ const getCategoryForId = async (req, res, next) => {
 };
 
 const createCategory = async (req, res, next) => {
-  console.log('Req', req.body);
-
   try {
     const categoryData = req.body;
 
@@ -60,6 +58,7 @@ const createCategory = async (req, res, next) => {
     res.status(500).send({
       message: 'An error occurred while creating the category.'
     });
+    next(err);
   }
 };
 
