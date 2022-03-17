@@ -6,7 +6,9 @@ const mongoose = require('mongoose');
 //Definition the schema of conversation chat
 const conversationSchema = mongoose.Schema(
   {
-    members: {type: Array}
+    members: {type: Array},
+    // advertisementId: {type: String},
+    advertisement: {type: mongoose.Schema.Types.ObjectID, ref: 'advertisement'}
   },
   {timestamps: true}
 );
