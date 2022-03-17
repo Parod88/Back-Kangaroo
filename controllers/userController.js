@@ -120,7 +120,7 @@ const confirmSignUp = async (req, res, next) => {
   } catch (error) {
     return res.status(400).json({error, message: 'Something went wrong'});
   }
-  res.status(200).redirect(process.env.FRONT_CONFIRM_URL).json({message: 'sign up completed'});
+  res.status(200).json({message: 'sign up completed'});
 };
 
 //Edit a User
