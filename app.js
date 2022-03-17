@@ -60,6 +60,7 @@ app.use('/', require('./routes/index'));
 // Api routers
 app.use('/api/v1/user', require('./routes/api/v1/users'));
 app.use('/api/v1/advertisements', require('./routes/api/v1/advertisement'));
+app.use('/api/v1/categories', require('./routes/api/v1/category'));
 app.use('/api/v1/login', loginRoutes);
 
 //==================================================================
