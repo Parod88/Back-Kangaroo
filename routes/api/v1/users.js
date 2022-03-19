@@ -3,17 +3,15 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../../../middlewares/jwtAuth');
 const {
-  exampleUserMethod, //TODO BORRAR PARA PRODUCCION
   update,
   register,
   confirmSignUp,
-  deleteUser
+  deleteUser,
+  getAllUsers,
+  getOneUserForId
 } = require('../../../controllers/userController.js');
 const {forgotPassword, resetPassword} = require('../../../controllers/resetPasswordController');
 const User = require('../../../models/User');
-
-// Routes
-router.get('/', exampleUserMethod);
 
 // Forgot Password
 router.put('/forgot-password', forgotPassword);
