@@ -21,6 +21,8 @@ router.put('/forgot-password', forgotPassword);
 router.put('/new-password/:token', resetPassword);
 
 // /user
+router.get('/', getAllUsers); //TODO: if auth implement
+router.get('/:userId', getOneUserForId); //TODO: if auth implement
 router.post('/register', register);
 router.put('/confirm-signup/:confirmToken', confirmSignUp);
 router.delete('/:userId', deleteUser); //TODO Volver A PONER jwt middleware
