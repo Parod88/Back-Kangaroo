@@ -60,6 +60,9 @@ const getAdvertById = async (req, res, next) => {
 const createAdvert = async (req, res, next) => {
   try {
     const advertData = req.body;
+    const imageData = req.file;
+
+    const categoriesList = req.body.categories.split(',');
 
     const advertExist = await AdvertisementModel.exists({name: advertData.name});
     if (advertExist) {
@@ -69,19 +72,25 @@ const createAdvert = async (req, res, next) => {
       return;
     }
 
-    const advert = new AdvertisementModel({
+    const newAdvert = new AdvertisementModel({
       name: advertData.name,
       description: advertData.description,
+      nameEn: advertData.nameEn,
+      descriptionEn: advertData.descriptionEn,
       sale: advertData.sale,
       price: advertData.price,
-      image: advertData.image,
-      categories: advertData.categories,
-      gallery: advertData.gallery,
+      image: `${imageData.filename}`,
+      categories: categoriesList,
+      gallery: [],
       tags: advertData.tags,
       author: advertData.author
     });
 
-    const createdAdvert = await advert.save();
+    console.log('advert', newAdvert);
+
+    // await Category.updateMany({_id: newAdvert.categories}, {$push: {adverts: newProduct._id}});
+
+    const createdAdvert = await newAdvert.save();
     res.status(201).json({message: 'Advert Created', results: createdAdvert});
   } catch (error) {
     res.status(500).send({

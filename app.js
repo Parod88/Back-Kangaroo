@@ -32,11 +32,12 @@ app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
 const swagger = require('swagger-node-express');
-app.use(express.urlencoded({extended: false}));
+app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 
 //Directory static files
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
 //==================================================================
 //Configura Swagger for documentation API
