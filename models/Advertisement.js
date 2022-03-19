@@ -10,13 +10,22 @@ const advertisementSchema = mongoose.Schema(
     nameEn: {type: String, maxLength: 100, required: true, index: true},
     description: {type: String, maxLength: 1000, required: true},
     descriptionEn: {type: String, maxLength: 1000, required: true},
-    sale: {type: Boolean, required: true, index: true},
+    type: {
+      type: String,
+      enum: ['Sale', 'Purchase'],
+      default: 'Sale'
+    },
     price: {type: Number, required: true},
     image: {type: String, maxLength: 500},
     categories: [{type: mongoose.Schema.Types.ObjectID, ref: 'Category'}],
     gallery: [],
     tags: {type: [String], default: ['uncategorized']},
-    author: {type: mongoose.Schema.Types.ObjectID, ref: 'User'}
+    author: {type: mongoose.Schema.Types.ObjectID, ref: 'User'},
+    state: {
+      type: String,
+      enum: ['ForSale', 'Inactive', 'Finished'],
+      default: 'ForSale'
+    }
   },
   {timestamps: true}
 );

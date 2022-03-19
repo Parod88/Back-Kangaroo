@@ -34,7 +34,7 @@ async function createSeedAdvertisementData() {
     advertisement.push({
       name: faker.commerce.productName(),
       description: faker.lorem.paragraph(),
-      sale: faker.datatype.boolean(),
+      type: faker.datatype.boolean(),
       price: faker.datatype.number(3, 150),
       image: faker.image.imageUrl(),
       gallery: [

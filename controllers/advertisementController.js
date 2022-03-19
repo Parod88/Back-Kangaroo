@@ -53,16 +53,16 @@ const getAdvertById = async (req, res, next) => {
     res.status(500).send({
       message: 'An error occurred while viewing the advertisement.'
     });
-    next(err);
+    next(error);
   }
 };
 
 const createAdvert = async (req, res, next) => {
+  console.log(req.body);
+
   try {
     const advertData = req.body;
     const imageData = req.file;
-
-    const categoriesList = req.body.categories.split(',');
 
     const advertExist = await AdvertisementModel.exists({name: advertData.name});
     if (advertExist) {
@@ -77,18 +77,14 @@ const createAdvert = async (req, res, next) => {
       description: advertData.description,
       nameEn: advertData.nameEn,
       descriptionEn: advertData.descriptionEn,
-      sale: advertData.sale,
+      type: advertData.type,
       price: advertData.price,
       image: `${imageData.filename}`,
-      categories: categoriesList,
+      categories: req.body.categories.split(','),
       gallery: [],
-      tags: advertData.tags,
+      tags: req.body.tags.split(','),
       author: advertData.author
     });
-
-    console.log('advert', newAdvert);
-
-    // await Category.updateMany({_id: newAdvert.categories}, {$push: {adverts: newProduct._id}});
 
     const createdAdvert = await newAdvert.save();
     res.status(201).json({message: 'Advert Created', results: createdAdvert});
@@ -101,13 +97,35 @@ const createAdvert = async (req, res, next) => {
 };
 
 const updateAdvert = async (req, res, next) => {
+  console.log('body', req.body);
+  console.log('advertId', req.params.advertId);
+  console.log('file', req.file);
+
   try {
     const advertId = req.params.advertId;
     const advertData = req.body;
+    const imageData = req.file;
+
+    const categoriesList = req.body.categories.split(',');
+    const tagsList = req.body.tags.split(',');
+
+    const advertReturn = await AdvertisementModel.findById(advertId);
 
     const advertUpdateResult = await AdvertisementModel.findByIdAndUpdate(
       {_id: advertId},
-      advertData,
+      {
+        name: advertData.name,
+        description: advertData.description,
+        nameEn: advertData.nameEn,
+        descriptionEn: advertData.descriptionEn,
+        type: advertData.type,
+        price: advertData.price,
+        image: req.file ? req.file.filename : advertReturn.image,
+        categories: categoriesList,
+        gallery: [],
+        tags: tagsList,
+        author: advertData.author
+      },
       {new: true} // Return final state
     );
 
