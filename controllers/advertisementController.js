@@ -1,19 +1,13 @@
 'use strict';
 
 const AdvertisementModel = require('../models/Advertisement.js');
-const User = require('../models/User.js');
 
-//CRUD
-
-//api/v1/advertisements
-// GET
 const getAdvertisementsList = async (req, res, next) => {
   try {
     const advertisementsList = await AdvertisementModel.find()
       .populate('author')
       .sort({updatedAt: -1});
     res.status(200).json({results: advertisementsList});
-    // res.status(302).redirect('/api/v1/advertisements/1');
   } catch (error) {
     res.status(500).send({
       message: 'An error occurred.'
@@ -34,64 +28,145 @@ const getPaginatedAdvertisementsList = async (req, res, next) => {
       .exec();
     res.json({results: paginatedAdvertisements});
   } catch (error) {
+    res.status(500).send({
+      message: 'An error occurred.'
+    });
     next(error);
   }
 };
 
 const getAdvertById = async (req, res, next) => {
   try {
-    const _id = req.params._id;
+    const advertId = req.params.advertId;
+    const advert = await AdvertisementModel.findById(advertId);
 
-    const singleAdvert = await AdvertisementModel.findById(_id);
-    res.json({results: singleAdvert});
+    //Send no exist id
+    if (!advert) {
+      res.status(404).json({
+        error: `The record with id: ${advertId} does not exist`
+      });
+      return;
+    }
+    //Send response
+    res.json({results: advert});
   } catch (error) {
+    res.status(500).send({
+      message: 'An error occurred while viewing the advertisement.'
+    });
     next(error);
   }
 };
 
-// POST
-//api/v1 / advertisments
 const createAdvert = async (req, res, next) => {
+  console.log(req.body);
+
   try {
-    const {name, description, sale, price, image, gallery, tags, author} = req.body;
-    const newAdvertisement = new AdvertisementModel({
-      name,
-      description,
-      sale,
-      price,
-      image,
-      gallery,
-      tags,
-      author
+    const advertData = req.body;
+    const imageData = req.file;
+
+    const advertExist = await AdvertisementModel.exists({name: advertData.name});
+    if (advertExist) {
+      res.status(404).json({
+        error: `There is already an advert with the same name.`
+      });
+      return;
+    }
+
+    const newAdvert = new AdvertisementModel({
+      name: advertData.name,
+      description: advertData.description,
+      nameEn: advertData.nameEn,
+      descriptionEn: advertData.descriptionEn,
+      type: advertData.type,
+      price: advertData.price,
+      image: `${imageData.filename}`,
+      categories: req.body.categories.split(','),
+      gallery: [],
+      tags: req.body.tags.split(','),
+      author: advertData.author
     });
-    const advertSaved = await newAdvertisement.save();
-    res.status(201).json({results: advertSaved});
+
+    const createdAdvert = await newAdvert.save();
+    res.status(201).json({message: 'Advert Created', results: createdAdvert});
   } catch (error) {
+    res.status(500).send({
+      message: 'An error occurred while creating the advert.'
+    });
     next(error);
   }
 };
 
-//PUT
-//api/v1/advertisments
-const updateAdvertById = async (req, res, next) => {
+const updateAdvert = async (req, res, next) => {
+  console.log('body', req.body);
+  console.log('advertId', req.params.advertId);
+  console.log('file', req.file);
+
   try {
-    const updateAdvert = await AdvertisementModel.findByIdAndUpdate(req.params._id, req.body, {
-      new: true
+    const advertId = req.params.advertId;
+    const advertData = req.body;
+    const imageData = req.file;
+
+    const categoriesList = req.body.categories.split(',');
+    const tagsList = req.body.tags.split(',');
+
+    const advertReturn = await AdvertisementModel.findById(advertId);
+
+    const advertUpdateResult = await AdvertisementModel.findByIdAndUpdate(
+      {_id: advertId},
+      {
+        name: advertData.name,
+        description: advertData.description,
+        nameEn: advertData.nameEn,
+        descriptionEn: advertData.descriptionEn,
+        type: advertData.type,
+        price: advertData.price,
+        image: req.file ? req.file.filename : advertReturn.image,
+        categories: categoriesList,
+        gallery: [],
+        tags: tagsList,
+        author: advertData.author
+      },
+      {new: true} // Return final state
+    );
+
+    if (!advertUpdateResult) {
+      res.status(404).json({
+        error: `The record with id: ${advertId} does not exist`
+      });
+      return;
+    }
+
+    res.status(200).json({
+      message: 'Advert Updated',
+      results: advertUpdateResult
     });
-    res.status(200).json({results: updateAdvert});
-  } catch (error) {
-    next(error);
+  } catch (err) {
+    res.status(500).send({
+      message: 'An error occurred while updating the advert.'
+    });
+    next(err);
   }
 };
 
-//DELETE
-//api/v1/advertisments
-const deleteAdvertById = async (req, res, next) => {
+const deleteAdvert = async (req, res, next) => {
   try {
-    await AdvertisementModel.findByIdAndDelete(req.params._id);
-    res.status(204).json();
-  } catch (error) {
-    next(error);
+    const advertId = req.params.advertId;
+    const advertDelete = await AdvertisementModel.findByIdAndDelete(advertId);
+
+    if (!advertDelete) {
+      res.status(404).json({error: `The record with id: ${advertId} not found.`});
+      return;
+    }
+
+    res.status(200).json({
+      message: 'Advertisement Deleted',
+      results: advertDelete
+    });
+  } catch (err) {
+    res.status(500).send({
+      message: 'An error occurred while the advertisement was being removed.'
+    });
+    next(err);
   }
 };
 
@@ -100,6 +175,6 @@ module.exports = {
   getPaginatedAdvertisementsList,
   getAdvertById,
   createAdvert,
-  updateAdvertById,
-  deleteAdvertById
+  updateAdvert,
+  deleteAdvert
 };
