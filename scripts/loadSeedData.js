@@ -42,11 +42,11 @@ async function initUsers() {
 //================================================================
 async function initCategories() {
   // Delete possible users
-  const deletedCategories = await userModel.deleteMany();
+  const deletedCategories = await categoryModel.deleteMany();
   console.log(`Deleted ${deletedCategories.deletedCount} categories.`);
 
   // Create mockData users
-  const categories = await userModel.insertMany(categoriesSeedData.categories);
+  const categories = await categoryModel.insertMany(categoriesSeedData.categories);
 
   // Create mockData users
   console.log(`Create ${categories.length} categories.`);
@@ -61,8 +61,9 @@ async function initAdvertisement() {
   console.log(`Deleted ${deletedAdvertisements.deletedCount} advertisements.`);
 
   //Search user id for asociate advertisement with user admin
-  const userAdmin = await userModel.findOne({email: 'admin@wallaclone.com'});
-  const categoriesList = await userModel.find();
+  // const userAdmin = await userModel.findOne({email: 'admin@kangaroo.com'});
+  const usersList = await userModel.find();
+  const categoriesList = await categoryModel.find();
 
   //Asociate advertisement with user hosted id
   const advertisementsWithAuthor = advertisementSeedData.advertisements.map((advertisement) => {
@@ -70,7 +71,7 @@ async function initAdvertisement() {
       categoriesList[Math.floor(Math.random() * categoriesList.length)]._id,
       categoriesList[Math.floor(Math.random() * categoriesList.length)]._id
     ];
-    advertisement.author = userAdmin._id;
+    advertisement.author = usersList[Math.floor(Math.random() * usersList.length)]._id;
     return advertisement;
   });
 
