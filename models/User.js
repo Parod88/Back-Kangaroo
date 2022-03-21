@@ -21,12 +21,12 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-userSchema.statics.hashPassword = function (passwordHashed) {
-  return bcrypt.hash(passwordHashed, 7);
+userSchema.statics.hashPassword = function (unhashedPassword) {
+  return bcrypt.hash(unhashedPassword, 7);
 };
 
-userSchema.methods.comparePassword = function (passwordHashed) {
-  return bcrypt.compare(passwordHashed, this.password);
+userSchema.methods.comparePassword = function (unhashedPassword) {
+  return bcrypt.compare(unhashedPassword, this.password);
 };
 
 //Create model
