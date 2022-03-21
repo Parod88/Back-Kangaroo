@@ -6,15 +6,18 @@ const dbConnection = require('../services/connectionBD_Mongo');
 //Import models
 const advertisementModel = require('../models/Advertisement');
 const userModel = require('../models/User');
+const categoryModel = require('../models/category');
 
 //Import data
 const advertisementSeedData = require('./seedData/advertisementSeedData');
 const userSeedData = require('./seedData/usersAdminSeedData');
+const categoriesSeedData = require('./seedData/categoriesSeedData');
 
 main().catch((err) => console.log('There was an error', err));
 
 async function main() {
   await initUsers();
+  await initCategories();
   await initAdvertisement();
   dbConnection.close();
 }
@@ -35,6 +38,21 @@ async function initUsers() {
 }
 
 //================================================================
+//Create mock categories in database
+//================================================================
+async function initCategories() {
+  // Delete possible users
+  const deletedCategories = await userModel.deleteMany();
+  console.log(`Deleted ${deletedCategories.deletedCount} categories.`);
+
+  // Create mockData users
+  const categories = await userModel.insertMany(categoriesSeedData.categories);
+
+  // Create mockData users
+  console.log(`Create ${categories.length} categories.`);
+}
+
+//================================================================
 //Create mock advertisements in database
 //================================================================
 async function initAdvertisement() {
@@ -44,9 +62,14 @@ async function initAdvertisement() {
 
   //Search user id for asociate advertisement with user admin
   const userAdmin = await userModel.findOne({email: 'admin@wallaclone.com'});
+  const categoriesList = await userModel.find();
 
   //Asociate advertisement with user hosted id
   const advertisementsWithAuthor = advertisementSeedData.advertisements.map((advertisement) => {
+    advertisement.categories = [
+      categoriesList[Math.floor(Math.random() * categoriesList.length)]._id,
+      categoriesList[Math.floor(Math.random() * categoriesList.length)]._id
+    ];
     advertisement.author = userAdmin._id;
     return advertisement;
   });

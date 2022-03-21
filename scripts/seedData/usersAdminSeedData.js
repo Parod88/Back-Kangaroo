@@ -4,26 +4,35 @@ const data = {
   users: [
     {
       name: 'WallacloneAdmin',
-      email: 'admin@wallaclone.com',
+      email: 'admin@kangaroo.com',
       password: bcrypt.hashSync('123456'),
       imageAvatar: 'https://i.pravatar.cc/500',
-      isAdmin: true,
+      userToken: '',
+      followers: [],
+      followings: [],
+      vendors: [],
       active: true
     },
     {
       name: 'WallacloneAdvertiser',
-      email: 'advertiser@wallaclone.com',
+      email: 'advertiser@kangaroo.com',
       password: bcrypt.hashSync('123456'),
       imageAvatar: 'https://i.pravatar.cc/500',
-      isAdmin: true,
+      userToken: '',
+      followers: [],
+      followings: [],
+      vendors: [],
       active: true
     },
     {
       name: 'WallacloneUser',
-      email: 'user@wallaclone.com',
+      email: 'user@kangaroo.com',
       password: bcrypt.hashSync('123456'),
       imageAvatar: 'https://i.pravatar.cc/500',
-      isAdmin: true,
+      userToken: '',
+      followers: [],
+      followings: [],
+      vendors: [],
       active: true
     },
     {
@@ -31,7 +40,10 @@ const data = {
       email: 'kangaroomailer@gmail.com',
       password: bcrypt.hashSync('123456'),
       imageAvatar: 'https://i.pravatar.cc/500',
-      isAdmin: true,
+      userToken: '',
+      followers: [],
+      followings: [],
+      vendors: [],
       active: true
     }
   ]
