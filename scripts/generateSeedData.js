@@ -30,22 +30,25 @@ async function generateSeedUsersData() {
 async function createSeedAdvertisementData() {
   var advertisement = [];
 
-  for (let id = 1; id <= 100; id++) {
+  for (let id = 1; id <= 10; id++) {
     advertisement.push({
       name: faker.commerce.productName(),
+      nameEn: faker.commerce.productName(),
       description: faker.lorem.paragraph(),
-      type: faker.datatype.boolean(),
+      descriptionEn: faker.lorem.paragraph(),
+      type: 'Sale',
       price: faker.datatype.number(3, 150),
       image: faker.image.imageUrl(),
+      categories: [],
       gallery: [
         faker.image.sports(1500, 1500),
         faker.image.sports(1500, 1500),
         faker.image.sports(1500, 1500),
         faker.image.sports(1500, 1500)
       ],
-      //In model limit enum tags
       tags: ['tag1', 'tag2'],
-      author: ''
+      author: '',
+      state: 'ForSale'
     });
   }
 
