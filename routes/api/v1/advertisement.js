@@ -1,7 +1,7 @@
 'use strict';
 
 const express = require('express');
-const multerUploadFile = require('../../../middlewares/multerConfigure');
+const uploadFile = require('../../../middlewares/multerSingleFileConfigure');
 const router = express.Router();
 const {
   getAdvertisementsList,
@@ -16,8 +16,8 @@ const {
 router.get('/', getAdvertisementsList);
 router.get('/:p&:page', getPaginatedAdvertisementsList);
 router.get('/:advertId', getAdvertById);
-router.post('/', multerUploadFile, createAdvert);
-router.put('/:advertId', multerUploadFile, updateAdvert);
+router.post('/', uploadFile, createAdvert);
+router.put('/:advertId', uploadFile, updateAdvert);
 router.delete('/:advertId', deleteAdvert);
 
 module.exports = router;

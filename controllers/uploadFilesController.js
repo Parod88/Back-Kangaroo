@@ -1,6 +1,6 @@
 'use strict';
 
-// const uploadCloudinary = require('../services/uploadCloudinary');
+const uploadCloudinary = require('../services/uploadCloudinary');
 const fs = require('fs');
 const cloudinary = require('cloudinary');
 
@@ -17,7 +17,6 @@ const uploadFileLocal = async (req, res, next) => {
 
 const uploadFileCloudinary = async (req, res, next) => {
   try {
-    //Send to cloudinary
     if (req.file.path) {
       const newPath = await uploadCloudinary.uploadsLocalFiles(req.file.path);
       fs.unlinkSync(req.file.path);
@@ -49,7 +48,6 @@ const uploadFileProfileCloudinary = async (req, res, next) => {
 
 const uploadFilesCloudinary = async (req, res, next) => {
   try {
-    //Read gallery images files in uploads directory and send to cloudinary
     const urlsGallery = [];
     if (req.files) {
       for (const file of req.files) {
