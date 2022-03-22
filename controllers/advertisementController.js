@@ -61,7 +61,7 @@ const createAdvert = async (req, res, next) => {
   try {
     const advertData = req.body;
     const imagesSize = advertData.image.length;
-    console.log('imagesSize', imagesSize);
+
     const advertExist = await AdvertisementModel.exists({name: advertData.name});
     if (advertExist) {
       res.status(404).json({
@@ -95,16 +95,27 @@ const createAdvert = async (req, res, next) => {
 };
 
 const updateAdvert = async (req, res, next) => {
-  console.log('body', req.body);
-  console.log('advertId', req.params.advertId);
-
   try {
     const advertId = req.params.advertId;
     const advertData = req.body;
 
+    const advert = await AdvertisementModel.findById(advertId);
+
     const advertUpdateResult = await AdvertisementModel.findByIdAndUpdate(
       {_id: advertId},
-      advertData,
+      {
+        name: advertData.name || advert.name,
+        description: advertData.description || advert.description,
+        nameEn: advertData.nameEn || advert.nameEn,
+        descriptionEn: advertData.descriptionEn || advert.descriptionEn,
+        type: advertData.type || advert.type,
+        price: advertData.price || advert.price,
+        image: advertData.image[0] || advert.image,
+        categories: advertData.categories || advert.image,
+        gallery: [],
+        tags: advertData.tags || advert.tags,
+        author: advertData.author
+      },
       {new: true} // Return final state
     );
 
