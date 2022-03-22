@@ -2,7 +2,6 @@
 
 const jwt = require('jsonwebtoken');
 const UserModel = require('../models/User');
-const {unsubscribe} = require('../routes/api/v1/users');
 const {transporter, resetPasswordEmail} = require('../services/mailer');
 
 const forgotPassword = async (req, res, next) => {
@@ -26,7 +25,7 @@ const forgotPassword = async (req, res, next) => {
     next(error).json({message});
   }
 
-  //TODO SEND EMAIL
+  // SEND EMAIL
   try {
     await transporter.sendMail({
       from: `"Forgotten Password" <${process.env.MAILER_ACCOUNT}> `,

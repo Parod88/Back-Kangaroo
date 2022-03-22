@@ -1,16 +1,17 @@
 'use strict';
-
 const express = require('express');
 const router = express.Router();
 const auth = require('../../../middlewares/jwtAuth');
-const {exampleUserMethod} = require('../../../controllers/userController.js');
-const {update} = require('../../../controllers/userController.js');
-const {register} = require('../../../controllers/userController.js');
+const {
+  updateUser,
+  register,
+  confirmSignUp,
+  deleteUser,
+  getAllUsers,
+  getOneUserForId
+} = require('../../../controllers/userController.js');
 const {forgotPassword, resetPassword} = require('../../../controllers/resetPasswordController');
-const {deleteUser} = require('../../../controllers/userController.js');
-
-// Routes
-router.get('/', exampleUserMethod);
+const User = require('../../../models/User');
 
 // Forgot Password
 router.put('/forgot-password', forgotPassword);
@@ -18,8 +19,11 @@ router.put('/forgot-password', forgotPassword);
 router.put('/new-password/:token', resetPassword);
 
 // /user
+router.get('/', getAllUsers); //TODO: if auth implement
+router.get('/:userId', getOneUserForId); //TODO: if auth implement
 router.post('/register', register);
-router.put('/:userId', auth, update);
-router.delete('/:userId', auth, deleteUser);
+router.put('/confirm-signup/:confirmToken', confirmSignUp);
+router.delete('/:userId', deleteUser); //TODO Volver A PONER jwt middleware
+router.put('/:userId', auth, updateUser);
 
 module.exports = router;

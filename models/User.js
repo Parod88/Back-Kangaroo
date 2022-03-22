@@ -9,21 +9,27 @@ const userSchema = new mongoose.Schema(
     email: {type: String, trim: true, required: true, unique: true},
     password: {type: String, required: true},
     imageAvatar: {type: String, default: 'https://i.pravatar.cc/500'},
-    // isAdmin: {type: Boolean, default: false, required: true}    
+    phone: {type: String, trim: true},
+    location: {type: String},
+    personalDescription: {type: String},
     active: {type: Boolean, default: false, required: true},
-    userToken: {type: String, default: null, required: false, expires: 600}
+    userToken: {type: String, default: null, required: false, expires: 600},
+    followers: {type: Array, default: []},
+    followings: {type: Array, default: []},
+    vendors: {type: Array, default: []},
+    favorites: [{type: mongoose.Schema.Types.ObjectID, ref: 'Advertisement'}]
   },
   {
     timestamps: true
   }
 );
 
-userSchema.statics.hashPassword = function (passwordHashed) {
-  return bcrypt.hash(passwordHashed, 7);
+userSchema.statics.hashPassword = function (unhashedPassword) {
+  return bcrypt.hash(unhashedPassword, 7);
 };
 
-userSchema.methods.comparePassword = function (passwordHashed) {
-  return bcrypt.compare(passwordHashed, this.password);
+userSchema.methods.comparePassword = function (unhashedPassword) {
+  return bcrypt.compare(unhashedPassword, this.password);
 };
 
 //Create model
