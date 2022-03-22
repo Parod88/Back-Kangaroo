@@ -6,45 +6,69 @@ const data = {
       name: 'WallacloneAdmin',
       email: 'admin@kangaroo.com',
       password: bcrypt.hashSync('123456'),
-      imageAvatar: 'https://i.pravatar.cc/500',
+      imageAvatar:
+        'https://res.cloudinary.com/kangaroomailer/image/upload/v1647973795/kangaroo/user_profiles/kangaroo_nqpecd.webp',
+      phone: '650476450',
+      location: 'Barcelona',
+      personalDescription:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ac purus non augue rhoncus accumsan in eget neque. Sed convallis nisi ullamcorper quam viverra ornare.',
+      active: true,
       userToken: '',
       followers: [],
       followings: [],
       vendors: [],
-      active: true
+      favorites: []
     },
     {
       name: 'WallacloneAdvertiser',
       email: 'advertiser@kangaroo.com',
       password: bcrypt.hashSync('123456'),
-      imageAvatar: 'https://i.pravatar.cc/500',
+      imageAvatar:
+        'https://res.cloudinary.com/kangaroomailer/image/upload/v1647973795/kangaroo/user_profiles/kangaroo_nqpecd.webp',
+      phone: '650476450',
+      location: 'Barcelona',
+      personalDescription:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ac purus non augue rhoncus accumsan in eget neque. Sed convallis nisi ullamcorper quam viverra ornare.',
+      active: true,
       userToken: '',
       followers: [],
       followings: [],
       vendors: [],
-      active: true
+      favorites: []
     },
     {
       name: 'WallacloneUser',
       email: 'user@kangaroo.com',
       password: bcrypt.hashSync('123456'),
-      imageAvatar: 'https://i.pravatar.cc/500',
+      imageAvatar:
+        'https://res.cloudinary.com/kangaroomailer/image/upload/v1647973795/kangaroo/user_profiles/kangaroo_nqpecd.webp',
+      phone: '650476450',
+      location: 'Barcelona',
+      personalDescription:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ac purus non augue rhoncus accumsan in eget neque. Sed convallis nisi ullamcorper quam viverra ornare.',
+      active: true,
       userToken: '',
       followers: [],
       followings: [],
       vendors: [],
-      active: true
+      favorites: []
     },
     {
       name: 'WallacloneUser2',
       email: 'kangaroomailer@gmail.com',
       password: bcrypt.hashSync('123456'),
-      imageAvatar: 'https://i.pravatar.cc/500',
+      imageAvatar:
+        'https://res.cloudinary.com/kangaroomailer/image/upload/v1647973795/kangaroo/user_profiles/kangaroo_nqpecd.webp',
+      phone: '650476450',
+      location: 'Barcelona',
+      personalDescription:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ac purus non augue rhoncus accumsan in eget neque. Sed convallis nisi ullamcorper quam viverra ornare.',
+      active: true,
       userToken: '',
       followers: [],
       followings: [],
       vendors: [],
-      active: true
+      favorites: []
     }
   ]
 };
