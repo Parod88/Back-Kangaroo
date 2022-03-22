@@ -6,7 +6,7 @@ const dbConnection = require('../services/connectionBD_Mongo');
 //Import models
 const advertisementModel = require('../models/Advertisement');
 const userModel = require('../models/User');
-const categoryModel = require('../models/category');
+const categoryModel = require('../models/Category');
 
 //Import data
 const advertisementSeedData = require('./seedData/advertisementSeedData');
