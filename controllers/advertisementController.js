@@ -10,7 +10,8 @@ const getAdvertisementsList = async (req, res, next) => {
     res.status(200).json({results: advertisementsList});
   } catch (error) {
     res.status(500).send({
-      message: 'An error occurred.'
+      info: 'An error occurred.',
+      message: `${error}`
     });
     next(error);
   }
@@ -29,7 +30,8 @@ const getPaginatedAdvertisementsList = async (req, res, next) => {
     res.json({results: paginatedAdvertisements});
   } catch (error) {
     res.status(500).send({
-      message: 'An error occurred.'
+      info: 'An error occurred.',
+      message: `${error}`
     });
     next(error);
   }
@@ -43,7 +45,7 @@ const getAdvertById = async (req, res, next) => {
     //Send no exist id
     if (!advert) {
       res.status(404).json({
-        error: `The record with id: ${advertId} does not exist`
+        info: `The record with id: ${advertId} does not exist`
       });
       return;
     }
@@ -51,7 +53,8 @@ const getAdvertById = async (req, res, next) => {
     res.json({results: advert});
   } catch (error) {
     res.status(500).send({
-      message: 'An error occurred while viewing the advertisement.'
+      info: 'An error occurred while viewing the advertisement.',
+      message: `${error}`
     });
     next(error);
   }
@@ -65,7 +68,7 @@ const createAdvert = async (req, res, next) => {
     const advertExist = await AdvertisementModel.exists({name: advertData.name});
     if (advertExist) {
       res.status(404).json({
-        error: `There is already an advert with the same name.`
+        info: `There is already an advert with the same name.`
       });
       return;
     }
@@ -85,10 +88,11 @@ const createAdvert = async (req, res, next) => {
     });
 
     const createdAdvert = await newAdvert.save();
-    res.status(201).json({message: 'Advert Created', results: createdAdvert});
+    res.status(201).json({info: 'Advert Created', results: createdAdvert});
   } catch (error) {
     res.status(500).send({
-      message: 'An error occurred while creating the advert.'
+      info: 'An error occurred while creating the advert.',
+      message: `${error}`
     });
     next(error);
   }
@@ -119,24 +123,23 @@ const updateAdvert = async (req, res, next) => {
       {new: true} // Return final state
     );
 
-    console.log('advertUpdateResult', advertUpdateResult);
-
     if (!advertUpdateResult) {
       res.status(404).json({
-        error: `The record with id: ${advertId} does not exist`
+        info: `The record with id: ${advertId} does not exist`
       });
       return;
     }
 
     res.status(200).json({
-      message: 'Advert Updated',
+      info: 'Advert Updated',
       results: advertUpdateResult
     });
-  } catch (err) {
+  } catch (error) {
     res.status(500).send({
-      message: 'An error occurred while updating the advert.'
+      info: 'An error occurred while updating the advert.',
+      message: `${error}`
     });
-    next(err);
+    next(error);
   }
 };
 
@@ -151,12 +154,13 @@ const deleteAdvert = async (req, res, next) => {
     }
 
     res.status(200).json({
-      message: 'Advertisement Deleted',
+      info: 'Advertisement Deleted',
       results: advertDelete
     });
   } catch (err) {
     res.status(500).send({
-      message: 'An error occurred while the advertisement was being removed.'
+      info: 'An error occurred while the advertisement was being removed.',
+      message: `${error}`
     });
     next(err);
   }

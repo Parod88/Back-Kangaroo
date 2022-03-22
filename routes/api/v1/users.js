@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../../../middlewares/jwtAuth');
 const {
-  update,
+  updateUser,
   register,
   confirmSignUp,
   deleteUser,
@@ -24,6 +24,6 @@ router.get('/:userId', getOneUserForId); //TODO: if auth implement
 router.post('/register', register);
 router.put('/confirm-signup/:confirmToken', confirmSignUp);
 router.delete('/:userId', deleteUser); //TODO Volver A PONER jwt middleware
-router.put('/:userId', auth, update);
+router.put('/:userId', auth, updateUser);
 
 module.exports = router;

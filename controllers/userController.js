@@ -49,7 +49,7 @@ const register = async (req, res, next) => {
 
     if (password !== passwordConfirm) {
       res.status(400).json({
-        info: "passwords don't match eachother"
+        info: "Passwords don't match eachother"
       });
       return;
     }
@@ -113,8 +113,6 @@ const register = async (req, res, next) => {
     emailStatus = error;
     return res.status(400).json({message: 'Something went wrong'});
   }
-
-  console.log(createdUser);
 };
 
 //confirm Sign Up
@@ -144,7 +142,7 @@ const confirmSignUp = async (req, res, next) => {
 
 //Edit a User
 
-const update = async (req, res, next) => {
+const updateUser = async (req, res, next) => {
   try {
     const _id = req.params.userId;
     const data = req.body;
@@ -165,6 +163,7 @@ const update = async (req, res, next) => {
       info: 'User update process failed',
       message: `${error}`
     });
+    next(error);
   }
 };
 
@@ -189,6 +188,7 @@ const deleteUser = async (req, res, next) => {
       info: 'User delete process failed',
       message: `${error}`
     });
+    next(error);
   }
 };
 
@@ -197,6 +197,6 @@ module.exports = {
   getOneUserForId,
   register,
   confirmSignUp,
-  update,
+  updateUser,
   deleteUser
 };

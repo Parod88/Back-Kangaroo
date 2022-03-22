@@ -8,10 +8,10 @@ const getCategoriesList = async (req, res, next) => {
     res.status(200).json({results: categoriesList});
   } catch (error) {
     res.status(500).send({
-      message: 'An error occurred.'
+      info: 'An error occurred.'
     });
     res.status(500).send({
-      message: 'An error occurred while consulting the list of categories.'
+      info: 'An error occurred while consulting the list of categories.'
     });
   }
 };
@@ -22,14 +22,15 @@ const getCategoryForId = async (req, res, next) => {
     const category = await CategoryModel.find({categoryId});
     if (!category) {
       res.status(404).json({
-        error: `The record with id: ${categoryId} does not exist`
+        info: `The record with id: ${categoryId} does not exist`
       });
       return;
     }
     res.json({results: category});
   } catch (error) {
     res.status(500).send({
-      message: 'An error occurred while viewing the category.'
+      info: 'An error occurred while viewing the category.',
+      message: `${error}`
     });
   }
 };
@@ -41,7 +42,7 @@ const createCategory = async (req, res, next) => {
     const categoryExist = await CategoryModel.exists({name: categoryData.name});
     if (categoryExist) {
       res.status(404).json({
-        error: `There is already an category with the same name.`
+        info: `There is already an category with the same name.`
       });
       return;
     }
@@ -53,10 +54,11 @@ const createCategory = async (req, res, next) => {
     });
     const createdCategory = await category.save();
 
-    res.status(201).json({message: 'Category Created', results: createdCategory});
+    res.status(201).json({info: 'Category Created', results: createdCategory});
   } catch (error) {
     res.status(500).send({
-      message: 'An error occurred while creating the category.'
+      info: 'An error occurred while creating the category.',
+      message: `${error}`
     });
     next(err);
   }
@@ -75,20 +77,21 @@ const updateCategory = async (req, res, next) => {
 
     if (!categoryUpdateResult) {
       res.status(404).json({
-        error: `The record with id: ${categoryId} does not exist`
+        info: `The record with id: ${categoryId} does not exist`
       });
       return;
     }
 
     res.status(200).json({
-      message: 'Category Updated',
+      info: 'Category Updated',
       results: categoryUpdateResult
     });
-  } catch (err) {
+  } catch (error) {
     res.status(500).send({
-      message: 'An error occurred while updating the category.'
+      info: 'An error occurred while updating the category.',
+      message: `${error}`
     });
-    next(err);
+    next(error);
   }
 };
 
@@ -98,19 +101,20 @@ const deleteCategory = async (req, res, next) => {
     const categoryDelete = await CategoryModel.findByIdAndDelete(categoryId);
 
     if (!categoryDelete) {
-      res.status(404).json({error: `The record with id: ${categoryId} not found.`});
+      res.status(404).json({info: `The record with id: ${categoryId} not found.`});
       return;
     }
 
     res.status(200).json({
-      message: 'Category Deleted',
+      info: 'Category Deleted',
       results: categoryDelete
     });
-  } catch (err) {
+  } catch (error) {
     res.status(500).send({
-      message: 'An error occurred while the category was being removed.'
+      info: 'An error occurred while the category was being removed.',
+      message: `${error}`
     });
-    next(err);
+    next(error);
   }
 };
 
