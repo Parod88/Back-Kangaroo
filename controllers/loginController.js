@@ -28,9 +28,11 @@ const login = async (req, res, next) => {
           next(err);
           return;
         }
-        res.json({token: jwtToken});
+        console.log(user);
+        res.json({token: jwtToken, results: user});
       }
     );
+    // res.status(200).json({results: user});
   } catch (err) {
     next();
   }
