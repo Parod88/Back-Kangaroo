@@ -58,12 +58,10 @@ const getAdvertById = async (req, res, next) => {
 };
 
 const createAdvert = async (req, res, next) => {
-  console.log(req.body);
-
   try {
     const advertData = req.body;
-    const imageData = req.file;
-
+    const imagesSize = advertData.image.length;
+    console.log('imagesSize', imagesSize);
     const advertExist = await AdvertisementModel.exists({name: advertData.name});
     if (advertExist) {
       res.status(404).json({
@@ -79,10 +77,10 @@ const createAdvert = async (req, res, next) => {
       descriptionEn: advertData.descriptionEn,
       type: advertData.type,
       price: advertData.price,
-      image: `${imageData.filename}`,
-      categories: req.body.categories.split(','),
+      image: advertData.image[imagesSize - 1],
+      categories: advertData.categories,
       gallery: [],
-      tags: req.body.tags.split(','),
+      tags: advertData.tags,
       author: advertData.author
     });
 
@@ -99,35 +97,18 @@ const createAdvert = async (req, res, next) => {
 const updateAdvert = async (req, res, next) => {
   console.log('body', req.body);
   console.log('advertId', req.params.advertId);
-  console.log('file', req.file);
 
   try {
     const advertId = req.params.advertId;
     const advertData = req.body;
-    const imageData = req.file;
-
-    const categoriesList = req.body.categories.split(',');
-    const tagsList = req.body.tags.split(',');
-
-    const advertReturn = await AdvertisementModel.findById(advertId);
 
     const advertUpdateResult = await AdvertisementModel.findByIdAndUpdate(
       {_id: advertId},
-      {
-        name: advertData.name,
-        description: advertData.description,
-        nameEn: advertData.nameEn,
-        descriptionEn: advertData.descriptionEn,
-        type: advertData.type,
-        price: advertData.price,
-        image: req.file ? req.file.filename : advertReturn.image,
-        categories: categoriesList,
-        gallery: [],
-        tags: tagsList,
-        author: advertData.author
-      },
+      advertData,
       {new: true} // Return final state
     );
+
+    console.log('advertUpdateResult', advertUpdateResult);
 
     if (!advertUpdateResult) {
       res.status(404).json({
