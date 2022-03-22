@@ -5,7 +5,6 @@ const router = express.Router();
 const isAuth = require('../../../middlewares/auth');
 const uploadFile = require('../../../middlewares/multerSingleFileConfigure');
 const uploadFiles = require('../../../middlewares/multerMultipleFilesConfigure');
-const {isAdmin, isHosted, isHostedOrAdmin} = require('../../../middlewares/checkUserRole');
 
 const {
   uploadFileLocal,

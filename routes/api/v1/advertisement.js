@@ -2,6 +2,8 @@
 
 const express = require('express');
 const uploadFile = require('../../../middlewares/multerSingleFileConfigure');
+const isAuth = require('../../../middlewares/auth');
+
 const router = express.Router();
 const {
   getAdvertisementsList,
@@ -16,8 +18,8 @@ const {
 router.get('/', getAdvertisementsList);
 router.get('/:p&:page', getPaginatedAdvertisementsList);
 router.get('/:advertId', getAdvertById);
-router.post('/', uploadFile, createAdvert);
-router.put('/:advertId', uploadFile, updateAdvert);
-router.delete('/:advertId', deleteAdvert);
+router.post('/', isAuth, createAdvert);
+router.put('/:advertId', isAuth, updateAdvert);
+router.delete('/:advertId', isAuth, deleteAdvert);
 
 module.exports = router;

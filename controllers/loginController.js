@@ -21,7 +21,7 @@ const login = async (req, res, next) => {
       {_id: user._id},
       process.env.JWT_SECRET,
       {
-        expiresIn: '1h'
+        expiresIn: '10d'
       },
       (err, jwtToken) => {
         if (err) {
