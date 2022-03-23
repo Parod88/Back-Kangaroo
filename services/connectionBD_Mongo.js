@@ -13,7 +13,7 @@ mongoose.connection.once('open', () => {
 });
 
 // Create connection
-mongoose.connect(process.env.MONGODB_URL || 'mongodb://localhost/wallaclone', {
+mongoose.connect(process.env.MONGODB_URL || 'mongodb://localhost/kangaroo', {
   useNewUrlParser: true,
   useUnifiedTopology: true
   //useCreateIndex: true,
