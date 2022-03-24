@@ -99,6 +99,7 @@ const createAdvert = async (req, res, next) => {
 };
 
 const updateAdvert = async (req, res, next) => {
+  console.log('entra', req.body);
   try {
     const advertId = req.params.advertId;
     const advertData = req.body;
@@ -114,9 +115,10 @@ const updateAdvert = async (req, res, next) => {
         descriptionEn: advertData.descriptionEn || advert.descriptionEn,
         type: advertData.type || advert.type,
         price: advertData.price || advert.price,
-        image: advertData.image[0] || advert.image,
+        image: advertData.image[0] ? advertData.image[0] : advert.image,
         categories: advertData.categories || advert.image,
-        gallery: [],
+        state: advertData.state || advert.state,
+        gallery: advertData.gallery ? advertData.gallery : [],
         tags: advertData.tags || advert.tags,
         author: advertData.author
       },

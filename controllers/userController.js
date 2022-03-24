@@ -36,7 +36,6 @@ const getOneUserForId = async (req, res, next) => {
 };
 
 const register = async (req, res, next) => {
-  console.log(req.body);
   const {name, email, password, passwordConfirm, imageAvatar} = req.body;
   const user = await User.findOne({email});
   try {
