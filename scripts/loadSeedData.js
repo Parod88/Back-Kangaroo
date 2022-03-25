@@ -72,6 +72,7 @@ async function initAdvertisement() {
       categoriesList[Math.floor(Math.random() * categoriesList.length)]._id
     ];
     advertisement.author = usersList[Math.floor(Math.random() * usersList.length)]._id;
+    advertisement.reviews.author = usersList[Math.floor(Math.random() * usersList.length)]._id;
     return advertisement;
   });
 

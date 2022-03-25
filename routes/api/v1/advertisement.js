@@ -11,7 +11,8 @@ const {
   getAdvertById,
   createAdvert,
   updateAdvert,
-  deleteAdvert
+  deleteAdvert,
+  createAdveretReview
 } = require('../../../controllers/advertisementController.js');
 
 // Routes
@@ -19,6 +20,7 @@ router.get('/', getAdvertisementsList);
 router.get('/:p&:page', getPaginatedAdvertisementsList);
 router.get('/:advertId', getAdvertById);
 router.post('/', isAuth, createAdvert);
+router.post('/:advertId/reviews', isAuth, createAdveretReview);
 router.put('/:advertId', isAuth, updateAdvert);
 router.delete('/:advertId', isAuth, deleteAdvert);
 
