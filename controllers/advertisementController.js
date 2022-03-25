@@ -4,10 +4,49 @@ const AdvertisementModel = require('../models/Advertisement.js');
 
 const getAdvertisementsList = async (req, res, next) => {
   try {
-    const advertisementsList = await AdvertisementModel.find()
-      .populate('author')
-      .sort({updatedAt: -1});
+
+    const name = req.query.name;
+    const price = req.query.price;
+    const sale = req.query.sale;
+    const tags = req.query.tags;
+    const skip = parseInt(req.query.skip);
+    const limit = parseInt(req.query.limit);
+    const createdAt = req.query.sort;
+
+    const filter = {};
+
+    if (name) {
+      filter.name = new RegExp('^' + req.query.name, "i")
+    }
+
+    if(sale){
+      filter.sale = sale;
+    }
+
+    if(tags){
+      filter.tags = tags;
+    }
+
+    if(price){
+      if(price.includes("-")){
+          let newPrice = price.split("-");
+          filter.price = {};
+          if (newPrice[0]){
+              filter.price["$gte"] = newPrice[0]; 
+          }
+          if (newPrice[1]){
+              filter.price["$lte"] = newPrice[1]; 
+          }
+      } else {
+          filter.price = price;
+      }
+  }
+
+    const advertisementsList = await AdvertisementModel.list(filter, skip, limit, createdAt)
+      //.populate('author')
+      //.sort({updatedAt: -1});
     res.status(200).json({results: advertisementsList});
+    // res.status(302).redirect('/api/v1/advertisements/1');
   } catch (error) {
     res.status(500).send({
       message: 'An error occurred.'
@@ -170,11 +209,28 @@ const deleteAdvert = async (req, res, next) => {
   }
 };
 
+const getTags = async (req, res, next) => {
+  try {
+    
+    const tags = await AdvertisementModel.tags();
+
+    res.json({result: tags})
+    
+  } catch (err) {
+    res.status(500).send({
+      message: 'An error occurred while the tags was solicitated.'
+    });
+    next(err);
+  }
+};
+
+
 module.exports = {
   getAdvertisementsList,
   getPaginatedAdvertisementsList,
   getAdvertById,
   createAdvert,
   updateAdvert,
-  deleteAdvert
+  deleteAdvert,
+  getTags
 };
