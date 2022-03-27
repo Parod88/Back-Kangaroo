@@ -1,11 +1,23 @@
 'use strict';
 
-const Conversation = require('../../models/chat/Conversation.js');
+const ConversationModel = require('../../models/chat/Conversation.js');
+const AdvertisementModel = require('../../models/Advertisement.js');
+const UserModel = require('../../models/User.js');
 
 //Create a new conversation
 const createConversation = async (req, res, next) => {
+  const {userSenderId, userReceiverId, advertisementId} = req.body;
+  const advertisement = await AdvertisementModel.findOne({advertisementId});
+
   try {
-    const newConversation = new Conversation({
+    // if (user) {
+    //   res.status(400).json({
+    //     message: 'Email already exists'
+    //   });
+    //   return;
+    // }
+
+    const newConversation = new ConversationModel({
       members: [req.body.userSenderId, req.body.userReceiverId],
       advertisement: req.body.advertisementId
     });
@@ -21,8 +33,9 @@ const createConversation = async (req, res, next) => {
 
 //Get conversation of a user
 const getAllUserConversations = async (req, res, next) => {
+  console.log(req.body);
   try {
-    const userConversations = await Conversation.find({members: {$in: [req.params.userId]}});
+    const userConversations = await ConversationModel.find({members: {$in: [req.params.userId]}});
     res.status(200).json({results: userConversations});
   } catch (error) {
     res.status(500).send({
@@ -35,7 +48,7 @@ const getAllUserConversations = async (req, res, next) => {
 //Get conversation includes two userId
 const getTwoUsersConversation = async (req, res, next) => {
   try {
-    const conversation = await Conversation.find({
+    const conversation = await ConversationModel.find({
       members: {$all: [req.params.firstUserId, req.params.secondUserId]}
     });
     res.status(200).json({results: conversation});
