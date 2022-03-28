@@ -59,7 +59,7 @@ const getPaginatedAdvertisementsList = async (req, res, next) => {
   let perPage = 9;
   let page = req.params.page || 1;
   try {
-    const paginatedAdvertisements = await AdvertisementModel.find({})
+    const paginatedAdvertisements = await AdvertisementModel.find({author: {$ne: null}})
       .populate('author')
       .sort({updatedAt: -1})
       .skip(perPage * page - perPage)
