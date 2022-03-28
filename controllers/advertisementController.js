@@ -285,5 +285,4 @@ module.exports = {
   deleteAdvert,
   createAdveretReview,
   getTags
-  deleteAdvert
 };
