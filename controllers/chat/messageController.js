@@ -18,7 +18,6 @@ const createMessage = async (req, res, next) => {
 
 //Get messages of a conversation
 const getMessagesConversationId = async (req, res, next) => {
-  console.log('hola', req.params.conversationId);
   try {
     const messages = await Message.find({conversationId: req.params.conversationId});
     res.status(200).json({results: messages});

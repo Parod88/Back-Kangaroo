@@ -1,12 +1,50 @@
 'use strict';
 
 const AdvertisementModel = require('../models/Advertisement.js');
+const UserModel = require('../models/User');
 
 const getAdvertisementsList = async (req, res, next) => {
   try {
-    const advertisementsList = await AdvertisementModel.find()
-      .populate('author')
-      .sort({updatedAt: -1});
+    const name = req.query.name;
+    const price = req.query.price;
+    const sale = req.query.sale;
+    const tags = req.query.tags;
+    const skip = parseInt(req.query.skip);
+    const limit = parseInt(req.query.limit);
+    const createdAt = req.query.sort;
+
+    const filter = {};
+
+    if (name) {
+      filter.name = new RegExp('^' + req.query.name, 'i');
+    }
+
+    if (sale) {
+      filter.sale = sale;
+    }
+
+    if (tags) {
+      filter.tags = tags;
+    }
+
+    if (price) {
+      if (price.includes('-')) {
+        let newPrice = price.split('-');
+        filter.price = {};
+        if (newPrice[0]) {
+          filter.price['$gte'] = newPrice[0];
+        }
+        if (newPrice[1]) {
+          filter.price['$lte'] = newPrice[1];
+        }
+      } else {
+        filter.price = price;
+      }
+    }
+
+    const advertisementsList = await AdvertisementModel.list(filter, skip, limit, createdAt);
+    //.populate('author')
+    //.sort({updatedAt: -1});
     res.status(200).json({results: advertisementsList});
   } catch (error) {
     res.status(500).send({
@@ -21,13 +59,13 @@ const getPaginatedAdvertisementsList = async (req, res, next) => {
   let perPage = 9;
   let page = req.params.page || 1;
   try {
-    const paginatedAdvertisements = await AdvertisementModel.find({})
+    const paginatedAdvertisements = await AdvertisementModel.find({author: {$ne: null}})
       .populate('author')
       .sort({updatedAt: -1})
       .skip(perPage * page - perPage)
       .limit(perPage)
       .exec();
-    res.json({results: paginatedAdvertisements});
+    res.status(200).json({results: paginatedAdvertisements});
   } catch (error) {
     res.status(500).send({
       info: 'An error occurred.',
@@ -57,6 +95,19 @@ const getAdvertById = async (req, res, next) => {
       message: `${error}`
     });
     next(error);
+  }
+};
+
+const getAdvertByAuthorId = async (req, res, next) => {
+  try {
+    const {authorId} = req.body;
+    const advertsByAuthor = await AdvertisementModel.find({author: authorId});
+    res.status(200).json({results: advertsByAuthor});
+  } catch (error) {
+    res.status(500).send({
+      info: 'An error occurred.',
+      message: `${error}`
+    });
   }
 };
 
@@ -166,11 +217,72 @@ const deleteAdvert = async (req, res, next) => {
   }
 };
 
+const getTags = async (req, res, next) => {
+  try {
+    const tags = await AdvertisementModel.tags();
+
+    res.json({result: tags});
+  } catch (err) {
+    res.status(500).send({
+      message: 'An error occurred while the tags was solicitated.'
+    });
+    next(err);
+  }
+};
+
+const createAdveretReview = async (req, res, next) => {
+  try {
+    const advertId = req.params.advertId;
+    const advert = await AdvertisementModel.findById(advertId);
+
+    if (!advert) {
+      res.status(400).json({error: `The record with id: ${advertId} not found.`});
+      return;
+    }
+
+    if (advert) {
+      if (advert.reviews.find((review) => review.author === req.user.author)) {
+        res.status(400).json({error: `You already submitted a review for this advert`});
+        return;
+      }
+    }
+
+    //Create review
+    const review = {
+      author: req.user.name,
+      rating: Number(req.body.rating),
+      comment: req.body.comment
+    };
+
+    //Update data advert
+    advert.reviews.push(review);
+    advert.reviewCount = advert.reviews.length;
+    advert.reviewStart =
+      advert.reviews.reduce((a, c) => c.reviewStart + a, 0) / advert.reviews.length;
+    const newReviewAdvert = await advert.save();
+
+    //Send responses
+    res.status(200).json({
+      message: 'Review advert create',
+      results: newReviewAdvert.reviews[newReviewAdvert.reviews.length - 1]
+    });
+  } catch (error) {
+    res.status(500).send({
+      info: 'Advert Not Found',
+      message: `${error}`
+    });
+    next(error);
+  }
+};
+
 module.exports = {
   getAdvertisementsList,
   getPaginatedAdvertisementsList,
   getAdvertById,
+  getAdvertByAuthorId,
   createAdvert,
   updateAdvert,
-  deleteAdvert
+  deleteAdvert,
+  createAdveretReview,
+  getTags
 };

@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema(
     userToken: {type: String, default: null, required: false, expires: 600},
     followers: {type: Array, default: []},
     followings: {type: Array, default: []},
-    vendors: {type: Array, default: []},
+    conversations: [{type: mongoose.Schema.Types.ObjectID, ref: 'Conversation'}],
     favorites: [{type: mongoose.Schema.Types.ObjectID, ref: 'Advertisement'}]
   },
   {
