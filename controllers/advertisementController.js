@@ -1,10 +1,11 @@
 'use strict';
 
 const AdvertisementModel = require('../models/Advertisement.js');
+const UserModel = require('../models/User');
 
 const getAdvertisementsList = async (req, res, next) => {
   try {
-    const advertisementsList = await AdvertisementModel.find({author: {$ne: null}})
+    const advertisementsList = await AdvertisementModel.find()
       .populate('author')
       .sort({updatedAt: -1});
     res.status(200).json({results: advertisementsList});
@@ -16,20 +17,18 @@ const getAdvertisementsList = async (req, res, next) => {
     next(error);
   }
 };
-//TODO review this logic for adverts of deleted users
+
 const getPaginatedAdvertisementsList = async (req, res, next) => {
   let perPage = 9;
   let page = req.params.page || 1;
   try {
-    const paginatedAdvertisements = await AdvertisementModel.find({
-      author: {$exists: true, $ne: null}
-    })
+    const paginatedAdvertisements = await AdvertisementModel.find({})
       .populate('author')
       .sort({updatedAt: -1})
       .skip(perPage * page - perPage)
       .limit(perPage)
       .exec();
-    res.json({results: paginatedAdvertisements});
+    res.status(200).json({results: paginatedAdvertisements});
   } catch (error) {
     res.status(500).send({
       info: 'An error occurred.',
@@ -59,6 +58,19 @@ const getAdvertById = async (req, res, next) => {
       message: `${error}`
     });
     next(error);
+  }
+};
+
+const getAdvertByAuthorId = async (req, res, next) => {
+  try {
+    const {authorId} = req.body;
+    const advertsByAuthor = await AdvertisementModel.find({author: authorId});
+    res.status(200).json({results: advertsByAuthor});
+  } catch (error) {
+    res.status(500).send({
+      info: 'An error occurred.',
+      message: `${error}`
+    });
   }
 };
 
@@ -172,6 +184,7 @@ module.exports = {
   getAdvertisementsList,
   getPaginatedAdvertisementsList,
   getAdvertById,
+  getAdvertByAuthorId,
   createAdvert,
   updateAdvert,
   deleteAdvert

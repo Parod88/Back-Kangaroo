@@ -8,11 +8,12 @@ const getAllUsers = async (req, res, next) => {
   try {
     const users = await User.find({});
     res.status(200).json({results: users});
-  } catch (err) {
+  } catch (error) {
     res.status(500).send({
-      message: 'An error occurred while consulting the list of users.'
+      info: 'An error occurred while consulting the list of users.',
+      message: `${error}`
     });
-    next(err);
+    next(error);
   }
 };
 
@@ -27,16 +28,16 @@ const getOneUserForId = async (req, res, next) => {
     } else {
       res.status(200).json({results: user});
     }
-  } catch (err) {
+  } catch (error) {
     res.status(500).send({
-      message: 'An error occurred while return de users.'
+      info: 'An error occurred while return de users.',
+      message: `${error}`
     });
-    next(err);
+    next(error);
   }
 };
 
 const register = async (req, res, next) => {
-  console.log(req.body);
   const {name, email, password, passwordConfirm, imageAvatar} = req.body;
   const user = await User.findOne({email});
   try {
@@ -49,7 +50,7 @@ const register = async (req, res, next) => {
 
     if (password !== passwordConfirm) {
       res.status(400).json({
-        info: "Passwords don't match eachother"
+        message: "Passwords don't match eachother"
       });
       return;
     }
@@ -68,6 +69,7 @@ const register = async (req, res, next) => {
       info: 'User creation process failed',
       message: `${error}`
     });
+    next(error);
   }
 
   // SEND EMAIL
@@ -83,14 +85,13 @@ const register = async (req, res, next) => {
       {userId: createdUser.id, email: createdUser.email},
       process.env.JWT_SECRET_RESET,
       {
-        expiresIn: '30m'
+        expiresIn: '4d'
       }
     );
-    // verificationLink = `${process.env.BASE_URL}/api/v1/user/confirm-signup/${token}`;
     verificationLink = `${process.env.FRONT_CONFIRM_URL}/${token}`;
     createdUser.userToken = token;
   } catch (error) {
-    return res.status(400).json({message: 'Something went wrong'});
+    return res.status(400).json({info: 'Something went wrong'});
   }
   try {
     await transporter.sendMail({
@@ -104,14 +105,16 @@ const register = async (req, res, next) => {
     });
   } catch (error) {
     emailStatus = error;
-    return res.status(400).json({message: 'something went wrong'});
+    return res.status(400).json({info: 'Something went wrong', message: `${error}`});
+    next(error);
   }
 
   try {
     await createdUser.save();
   } catch (error) {
     emailStatus = error;
-    return res.status(400).json({message: 'Something went wrong'});
+    return res.status(400).json({info: 'Something went wrong', message: `${error}`});
+    next(error);
   }
 };
 
@@ -135,7 +138,8 @@ const confirmSignUp = async (req, res, next) => {
     user.userToken = null;
     await user.save();
   } catch (error) {
-    return res.status(400).json({error, message: 'Something went wrong'});
+    return res.status(400).json({info: 'Something went wrong', message: `${error}`});
+    next(error);
   }
   res.status(200).json({message: 'sign up completed'});
 };

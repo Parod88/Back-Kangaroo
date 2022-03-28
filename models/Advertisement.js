@@ -3,6 +3,16 @@
 //Import mongoose module
 const mongoose = require('mongoose');
 
+//Definition the schema of review
+const reviewSchema = mongoose.Schema(
+  {
+    author: {type: mongoose.Schema.Types.ObjectID, ref: 'User'},
+    comment: {type: String, required: true},
+    rating: {type: Number, required: true, unique: true}
+  },
+  {timestamps: true}
+);
+
 //Definition the schema of advertisement
 const advertisementSchema = mongoose.Schema(
   {
@@ -25,10 +35,24 @@ const advertisementSchema = mongoose.Schema(
       type: String,
       enum: ['ForSale', 'Inactive', 'Finished'],
       default: 'ForSale'
-    }
+    },
+    reviews: [reviewSchema]
   },
   {timestamps: true}
 );
+
+advertisementSchema.statics.list = (filter, skip, limit, createdAt) => {
+  const query = Advertisement.find(filter);
+  query.skip(skip);
+  query.limit(limit);
+  query.sort(createdAt);
+  return query.exec();
+}
+
+advertisementSchema.statics.tags = () => {
+  const query = Advertisement.find().distinct("tags");
+  return query.exec();
+}
 
 // Create the model
 const Advertisement = mongoose.model('Advertisement', advertisementSchema);
