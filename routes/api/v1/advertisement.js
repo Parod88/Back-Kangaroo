@@ -12,7 +12,7 @@ const {
   createAdvert,
   updateAdvert,
   deleteAdvert,
-  createAdveretReview
+  createAdveretReview,
   getTags
 } = require('../../../controllers/advertisementController.js');
 
@@ -25,6 +25,5 @@ router.post('/', isAuth, createAdvert);
 router.post('/:advertId/reviews', isAuth, createAdveretReview);
 router.put('/:advertId', isAuth, updateAdvert);
 router.delete('/:advertId', isAuth, deleteAdvert);
-
 
 module.exports = router;
