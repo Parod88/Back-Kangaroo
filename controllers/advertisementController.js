@@ -138,6 +138,7 @@ const createAdvert = async (req, res, next) => {
 };
 
 const updateAdvert = async (req, res, next) => {
+  console.log('entra', req.body);
   try {
     const advertId = req.params.advertId;
     const advertData = req.body;
@@ -153,9 +154,10 @@ const updateAdvert = async (req, res, next) => {
         descriptionEn: advertData.descriptionEn || advert.descriptionEn,
         type: advertData.type || advert.type,
         price: advertData.price || advert.price,
-        image: advertData.image[0] || advert.image,
+        image: advertData.image[0] ? advertData.image[0] : advert.image,
         categories: advertData.categories || advert.image,
-        gallery: [],
+        state: advertData.state || advert.state,
+        gallery: advertData.gallery ? advertData.gallery : [],
         tags: advertData.tags || advert.tags,
         author: advertData.author
       },
@@ -221,6 +223,51 @@ const getTags = async (req, res, next) => {
 };
 
 
+const createAdveretReview = async (req, res, next) => {
+  try {
+    const advertId = req.params.advertId;
+    const advert = await AdvertisementModel.findById(advertId);
+
+    if (!advert) {
+      res.status(400).json({error: `The record with id: ${advertId} not found.`});
+      return;
+    }
+
+    if (advert) {
+      if (advert.reviews.find((review) => review.author === req.user.author)) {
+        res.status(400).json({error: `You already submitted a review for this advert`});
+        return;
+      }
+    }
+
+    //Create review
+    const review = {
+      author: req.user.name,
+      rating: Number(req.body.rating),
+      comment: req.body.comment
+    };
+
+    //Update data advert
+    advert.reviews.push(review);
+    advert.reviewCount = advert.reviews.length;
+    advert.reviewStart =
+      advert.reviews.reduce((a, c) => c.reviewStart + a, 0) / advert.reviews.length;
+    const newReviewAdvert = await advert.save();
+
+    //Send responses
+    res.status(200).json({
+      message: 'Review advert create',
+      results: newReviewAdvert.reviews[newReviewAdvert.reviews.length - 1]
+    });
+  } catch (error) {
+    res.status(500).send({
+      info: 'Advert Not Found',
+      message: `${error}`
+    });
+    next(error);
+  }
+};
+
 module.exports = {
   getAdvertisementsList,
   getPaginatedAdvertisementsList,
@@ -228,5 +275,6 @@ module.exports = {
   createAdvert,
   updateAdvert,
   deleteAdvert,
+  createAdveretReview
   getTags
 };

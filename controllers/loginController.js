@@ -21,7 +21,7 @@ const login = async (req, res, next) => {
       {_id: user._id},
       process.env.JWT_SECRET,
       {
-        expiresIn: '10d'
+        expiresIn: '180m'
       },
       (err, jwtToken) => {
         if (err) {
@@ -32,8 +32,12 @@ const login = async (req, res, next) => {
       }
     );
     // res.status(200).json({results: user});
-  } catch (err) {
-    next();
+  } catch (error) {
+    res.status(500).send({
+      info: 'An error occurred.',
+      message: `${error}`
+    });
+    next(error);
   }
 };
 

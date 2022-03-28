@@ -1,7 +1,7 @@
 'use strict';
 const express = require('express');
 const router = express.Router();
-const auth = require('../../../middlewares/jwtAuth');
+const isAuth = require('../../../middlewares/auth');
 const {
   updateUser,
   register,
@@ -23,7 +23,7 @@ router.get('/', getAllUsers); //TODO: if auth implement
 router.get('/:userId', getOneUserForId); //TODO: if auth implement
 router.post('/register', register);
 router.put('/confirm-signup/:confirmToken', confirmSignUp);
-router.delete('/:userId', deleteUser); //TODO Volver A PONER jwt middleware
-router.put('/:userId', auth, updateUser);
+router.delete('/:userId', isAuth, deleteUser); //TODO Volver A PONER jwt middleware
+router.put('/:userId', isAuth, updateUser);
 
 module.exports = router;

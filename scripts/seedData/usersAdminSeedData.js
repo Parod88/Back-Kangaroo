@@ -16,7 +16,7 @@ const data = {
       userToken: '',
       followers: [],
       followings: [],
-      vendors: [],
+      conversations: [],
       favorites: []
     },
     {
@@ -33,7 +33,7 @@ const data = {
       userToken: '',
       followers: [],
       followings: [],
-      vendors: [],
+      conversations: [],
       favorites: []
     },
     {
@@ -50,7 +50,7 @@ const data = {
       userToken: '',
       followers: [],
       followings: [],
-      vendors: [],
+      conversations: [],
       favorites: []
     },
     {
@@ -67,7 +67,7 @@ const data = {
       userToken: '',
       followers: [],
       followings: [],
-      vendors: [],
+      conversations: [],
       favorites: []
     }
   ]
