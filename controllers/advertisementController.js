@@ -1,6 +1,7 @@
 'use strict';
 
 const AdvertisementModel = require('../models/Advertisement.js');
+const UserModel = require('../models/User');
 
 const getAdvertisementsList = async (req, res, next) => {
   try {
@@ -45,7 +46,6 @@ const getAdvertisementsList = async (req, res, next) => {
     //.populate('author')
     //.sort({updatedAt: -1});
     res.status(200).json({results: advertisementsList});
-    // res.status(302).redirect('/api/v1/advertisements/1');
   } catch (error) {
     res.status(500).send({
       info: 'An error occurred.',
@@ -65,7 +65,7 @@ const getPaginatedAdvertisementsList = async (req, res, next) => {
       .skip(perPage * page - perPage)
       .limit(perPage)
       .exec();
-    res.json({results: paginatedAdvertisements});
+    res.status(200).json({results: paginatedAdvertisements});
   } catch (error) {
     res.status(500).send({
       info: 'An error occurred.',
@@ -95,6 +95,19 @@ const getAdvertById = async (req, res, next) => {
       message: `${error}`
     });
     next(error);
+  }
+};
+
+const getAdvertByAuthorId = async (req, res, next) => {
+  try {
+    const {authorId} = req.body;
+    const advertsByAuthor = await AdvertisementModel.find({author: authorId});
+    res.status(200).json({results: advertsByAuthor});
+  } catch (error) {
+    res.status(500).send({
+      info: 'An error occurred.',
+      message: `${error}`
+    });
   }
 };
 
@@ -137,7 +150,6 @@ const createAdvert = async (req, res, next) => {
 };
 
 const updateAdvert = async (req, res, next) => {
-  console.log('entra', req.body);
   try {
     const advertId = req.params.advertId;
     const advertData = req.body;
@@ -153,10 +165,9 @@ const updateAdvert = async (req, res, next) => {
         descriptionEn: advertData.descriptionEn || advert.descriptionEn,
         type: advertData.type || advert.type,
         price: advertData.price || advert.price,
-        image: advertData.image[0] ? advertData.image[0] : advert.image,
+        image: advertData.image[0] || advert.image,
         categories: advertData.categories || advert.image,
-        state: advertData.state || advert.state,
-        gallery: advertData.gallery ? advertData.gallery : [],
+        gallery: [],
         tags: advertData.tags || advert.tags,
         author: advertData.author
       },
@@ -268,9 +279,11 @@ module.exports = {
   getAdvertisementsList,
   getPaginatedAdvertisementsList,
   getAdvertById,
+  getAdvertByAuthorId,
   createAdvert,
   updateAdvert,
   deleteAdvert,
   createAdveretReview,
   getTags
+  deleteAdvert
 };
