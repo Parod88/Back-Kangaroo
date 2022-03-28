@@ -83,7 +83,7 @@ const register = async (req, res, next) => {
       {userId: createdUser.id, email: createdUser.email},
       process.env.JWT_SECRET_RESET,
       {
-        expiresIn: '10m'
+        expiresIn: '30m'
       }
     );
     // verificationLink = `${process.env.BASE_URL}/api/v1/user/confirm-signup/${token}`;

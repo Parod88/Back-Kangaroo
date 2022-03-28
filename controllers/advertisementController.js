@@ -4,7 +4,7 @@ const AdvertisementModel = require('../models/Advertisement.js');
 
 const getAdvertisementsList = async (req, res, next) => {
   try {
-    const advertisementsList = await AdvertisementModel.find()
+    const advertisementsList = await AdvertisementModel.find({author: {$ne: null}})
       .populate('author')
       .sort({updatedAt: -1});
     res.status(200).json({results: advertisementsList});
@@ -16,12 +16,14 @@ const getAdvertisementsList = async (req, res, next) => {
     next(error);
   }
 };
-
+//TODO review this logic for adverts of deleted users
 const getPaginatedAdvertisementsList = async (req, res, next) => {
   let perPage = 9;
   let page = req.params.page || 1;
   try {
-    const paginatedAdvertisements = await AdvertisementModel.find({})
+    const paginatedAdvertisements = await AdvertisementModel.find({
+      author: {$exists: true, $ne: null}
+    })
       .populate('author')
       .sort({updatedAt: -1})
       .skip(perPage * page - perPage)
