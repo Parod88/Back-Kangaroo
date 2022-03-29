@@ -146,6 +146,39 @@ const confirmSignUp = async (req, res, next) => {
 
 //Edit a User
 
+const changePassword = async (req, res, next) => {
+  const _id = req.params.userId;
+  const {password, newPassword, newPasswordConfirm} = req.body;
+  const hashedPassword = await User.hashPassword(password);
+  const user = await User.findById({_id});
+  try {
+    if (!user) {
+      res.status(412).json({
+        error: `The record with id: ${_id} does not exist`
+      });
+    }
+    if (hashedPassword !== user.password) {
+      res.status(412).json({
+        error: `Wrong original password`
+      });
+    }
+    if (newPassword !== newPasswordConfirm) {
+      res.status(412).json({
+        error: `Your new passwords don't match eachother`
+      });
+    }
+    const newHashedPassword = await User.hashPassword(newPassword);
+    user.password = newHashedPassword;
+    await user.save();
+    res.status(201).json({message: 'Password changed succesfully'});
+  } catch (error) {
+    res.status(400).json({
+      info: 'Password update process failed',
+      message: `${error}`
+    });
+  }
+};
+
 const updateUser = async (req, res, next) => {
   try {
     const _id = req.params.userId;
@@ -202,5 +235,6 @@ module.exports = {
   register,
   confirmSignUp,
   updateUser,
-  deleteUser
+  deleteUser,
+  changePassword
 };
