@@ -151,23 +151,26 @@ const confirmSignUp = async (req, res, next) => {
 const changePassword = async (req, res, next) => {
   const _id = req.params.userId;
   const {password, newPassword, newPasswordConfirm} = req.body;
-  const hashedPassword = await User.hashPassword(password);
-  const user = await User.findById({_id});
+
   try {
+    const user = await User.findById({_id});
     if (!user) {
       res.status(412).json({
         error: `The record with id: ${_id} does not exist`
       });
+      return;
     }
-    if (hashedPassword !== user.password) {
+    if (!(await user.comparePassword(password))) {
       res.status(412).json({
         error: `Wrong original password`
       });
+      return;
     }
     if (newPassword !== newPasswordConfirm) {
       res.status(412).json({
         error: `Your new passwords don't match eachother`
       });
+      return;
     }
     const newHashedPassword = await User.hashPassword(newPassword);
     user.password = newHashedPassword;
@@ -176,7 +179,7 @@ const changePassword = async (req, res, next) => {
   } catch (error) {
     res.status(400).json({
       info: 'Password update process failed',
-      message: `${error}`
+      message: `This ${error}`
     });
   }
 };
