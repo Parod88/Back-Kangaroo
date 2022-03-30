@@ -99,9 +99,9 @@ const getAdvertById = async (req, res, next) => {
 };
 
 const getAdvertByAuthorId = async (req, res, next) => {
+  const {authorId} = req.params;
   try {
-    const {authorId} = req.body || req.params;
-    const advertsByAuthor = await AdvertisementModel.find({author: authorId});
+    const advertsByAuthor = await AdvertisementModel.find({author: authorId}).populate('author');
     res.status(200).json({results: advertsByAuthor});
   } catch (error) {
     res.status(500).send({

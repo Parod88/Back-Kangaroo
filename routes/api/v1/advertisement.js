@@ -21,7 +21,7 @@ const {
 // Routes
 router.get('/tags', getTags);
 router.get('/categories/:categoriesId', getAdvertByCategoryId);
-router.get('/author/:authorId');
+router.get('/author/:authorId', getAdvertByAuthorId);
 router.get('/', getAdvertisementsList);
 router.get('/:p&:page', getPaginatedAdvertisementsList);
 router.get('/:advertId', getAdvertById);
