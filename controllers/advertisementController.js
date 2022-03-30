@@ -111,6 +111,22 @@ const getAdvertByAuthorId = async (req, res, next) => {
   }
 };
 
+const getAdvertByCategoryId = async (req, res, next) => {
+  const Id = req.params.categoriesId;
+  try {
+    
+    //const advertsByCategories = await AdvertisementModel.find({"results.categories":`${Id}`});
+    const advertsByCategories = await AdvertisementModel.find({categories:{$in:[`${Id}`]}});
+    console.log(Id);
+    res.status(200).json({results: advertsByCategories});
+  } catch (error) {
+    res.status(500).send({
+      info: 'An error occurred.',
+      message: `${error}`
+    });
+  }
+};
+
 const createAdvert = async (req, res, next) => {
   try {
     const advertData = req.body;
@@ -284,5 +300,6 @@ module.exports = {
   updateAdvert,
   deleteAdvert,
   createAdveretReview,
-  getTags
+  getTags,
+  getAdvertByCategoryId
 };
