@@ -100,7 +100,7 @@ const getAdvertById = async (req, res, next) => {
 
 const getAdvertByAuthorId = async (req, res, next) => {
   try {
-    const {authorId} = req.body;
+    const {authorId} = req.body || req.params;
     const advertsByAuthor = await AdvertisementModel.find({author: authorId});
     res.status(200).json({results: advertsByAuthor});
   } catch (error) {
@@ -114,9 +114,8 @@ const getAdvertByAuthorId = async (req, res, next) => {
 const getAdvertByCategoryId = async (req, res, next) => {
   const Id = req.params.categoriesId;
   try {
-    
     //const advertsByCategories = await AdvertisementModel.find({"results.categories":`${Id}`});
-    const advertsByCategories = await AdvertisementModel.find({categories:{$in:[`${Id}`]}});
+    const advertsByCategories = await AdvertisementModel.find({categories: {$in: [`${Id}`]}});
     console.log(Id);
     res.status(200).json({results: advertsByCategories});
   } catch (error) {
