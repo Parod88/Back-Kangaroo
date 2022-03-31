@@ -8,7 +8,7 @@ const reviewSchema = mongoose.Schema(
   {
     author: {type: mongoose.Schema.Types.ObjectID, ref: 'User'},
     comment: {type: String, required: true},
-    rating: {type: Number, required: true, unique: true}
+    rating: {type: Number, required: true}
   },
   {timestamps: true}
 );
@@ -47,12 +47,12 @@ advertisementSchema.statics.list = (filter, skip, limit, createdAt) => {
   query.limit(limit);
   query.sort(createdAt);
   return query.exec();
-}
+};
 
 advertisementSchema.statics.tags = () => {
-  const query = Advertisement.find().distinct("tags");
+  const query = Advertisement.find().distinct('tags');
   return query.exec();
-}
+};
 
 // Create the model
 const Advertisement = mongoose.model('Advertisement', advertisementSchema);
