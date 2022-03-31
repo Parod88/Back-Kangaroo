@@ -13,11 +13,15 @@ const {
   updateAdvert,
   deleteAdvert,
   createAdveretReview,
-  getTags
+  getTags,
+  getAdvertByCategoryId,
+  getAdvertByAuthorId
 } = require('../../../controllers/advertisementController.js');
 
 // Routes
 router.get('/tags', getTags);
+router.get('/categories/:categoriesId', getAdvertByCategoryId);
+router.get('/author/:authorId', getAdvertByAuthorId);
 router.get('/', getAdvertisementsList);
 router.get('/:p&:page', getPaginatedAdvertisementsList);
 router.get('/:advertId', getAdvertById);

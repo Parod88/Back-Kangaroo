@@ -18,9 +18,11 @@ const getAllUsers = async (req, res, next) => {
 };
 
 const getOneUserForId = async (req, res, next) => {
+  // console.log('data', req.params.userId);
+
   try {
-    const _id = req.params.userId;
-    const user = await User.findById({_id});
+    const userId = req.params.userId;
+    const user = await User.findById(userId);
     if (!user) {
       res.status(404).json({
         error: `The record with id: ${_id} does not exist`
@@ -146,6 +148,42 @@ const confirmSignUp = async (req, res, next) => {
 
 //Edit a User
 
+const changePassword = async (req, res, next) => {
+  const _id = req.params.userId;
+  const {password, newPassword, newPasswordConfirm} = req.body;
+
+  try {
+    const user = await User.findById({_id});
+    if (!user) {
+      res.status(412).json({
+        error: `The record with id: ${_id} does not exist`
+      });
+      return;
+    }
+    if (!(await user.comparePassword(password))) {
+      res.status(412).json({
+        error: `Wrong original password`
+      });
+      return;
+    }
+    if (newPassword !== newPasswordConfirm) {
+      res.status(412).json({
+        error: `Your new passwords don't match eachother`
+      });
+      return;
+    }
+    const newHashedPassword = await User.hashPassword(newPassword);
+    user.password = newHashedPassword;
+    await user.save();
+    res.status(201).json({message: 'Password changed succesfully'});
+  } catch (error) {
+    res.status(400).json({
+      info: 'Password update process failed',
+      message: `This ${error}`
+    });
+  }
+};
+
 const updateUser = async (req, res, next) => {
   try {
     const _id = req.params.userId;
@@ -202,5 +240,6 @@ module.exports = {
   register,
   confirmSignUp,
   updateUser,
-  deleteUser
+  deleteUser,
+  changePassword
 };
