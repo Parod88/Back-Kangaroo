@@ -9,7 +9,8 @@ const userModel = require('../models/User');
 const categoryModel = require('../models/Category');
 
 //Import data
-const advertisementSeedData = require('./seedData/advertisementSeedData');
+// const advertisementSeedData = require('./seedData/advertisementSeedData');
+const advertisementSeedData = require('./seedData/advertisementSeedDataManual');
 const userSeedData = require('./seedData/usersAdminSeedData');
 const categoriesSeedData = require('./seedData/categoriesSeedData');
 
